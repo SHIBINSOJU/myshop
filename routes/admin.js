@@ -17,7 +17,8 @@ router.get('/admin', (req, res) => {
 // POST /admin/add-product - Handle the new product form
 router.post('/admin/add-product', async (req, res) => {
   try {
-    const { name, image, price, category, rating } = req.body;
+    // This is the line to update
+const { name, description, brand, image, price, originalPrice, category, rating, numRatings } = req.body;
 
     // Create a new product object
     const newProduct = new Product({
