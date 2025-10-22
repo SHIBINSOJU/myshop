@@ -12,7 +12,12 @@
       <li><a href="/contact" class="navbar-link">Contact</a></li>
       
       <% if (locals.user) { %>
+        <% if (user.email === process.env.ADMIN_EMAIL) { %>
+          <li><a href="/admin" class="navbar-link" style="color: var(--accent-color);">Admin</a></li>
+        <% } %>
+        
         <li><a href="/logout" class="navbar-button">Logout</a></li>
+      
       <% } else { %>
         <li><a href="/login" class="navbar-button">Login</a></li>
       <% } %>
