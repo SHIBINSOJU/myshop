@@ -53,6 +53,9 @@ app.use(session({
 app.use(async (req, res, next) => {
   res.locals.brandName = "Pixelcart"; // Make brand name global
   res.locals.user = null; // Default to null
+  // Expose current path and query to all templates for active nav states and search
+  res.locals.currentPath = req.path;
+  res.locals.currentQuery = req.query || {};
   // Global currency formatter: INR
   res.locals.formatPrice = (value) => {
     try {
