@@ -1,0 +1,27 @@
+<%- include('partials/header', { title: 'Verify OTP' }) %>
+<%- include('partials/navbar') %>
+
+<main class="form-container">
+  <h1>Verify Your Code</h1>
+  <p style="text-align: center; margin-bottom: 1.5rem; color: #555;">
+    An OTP has been sent to <strong><%= email %></strong>.
+  </p>
+  
+  <% if (locals.error) { %>
+    <div class="error-message"><%= error %></div>
+  <% } %>
+
+  <form action="/verify-otp" method="POST">
+    <div class="form-group">
+      <label for="otp">Enter 6-Digit OTP</label>
+      <input type="text" id="otp" name="otp" class="form-input" required maxlength="6" pattern="\d{6}">
+    </div>
+    <button type="submit" class="btn-submit">Log In</button>
+  </form>
+  
+  <p style="text-align: center; margin-top: 1rem; font-size: 0.9rem;">
+    <a href="/login" style="color: var(--accent-color);">Use a different email?</a>
+  </p>
+</main>
+
+<%- include('partials/footer') %>
