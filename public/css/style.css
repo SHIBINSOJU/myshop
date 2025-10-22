@@ -485,3 +485,33 @@ img {
     width: 100%;
   }
 }
+
+/* --- Product Rating Overlay --- */
+
+.product-image {
+  position: relative; /* Makes it the parent for the overlay */
+}
+
+/* This is the div you moved */
+.product-rating-row {
+  position: absolute;
+  bottom: 0.5rem; /* 8px from bottom */
+  left: 0.5rem;   /* 8px from left */
+  z-index: 10;
+
+  /* Resets old spacing rules */
+  margin-top: 0;
+  padding-top: 0;
+}
+
+/* New style for the rating itself to be readable on an image */
+.product-rating {
+  background-color: rgba(26, 26, 26, 0.75); /* Dark, semi-transparent background */
+  color: #ffffff; /* White text */
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Optional: subtle border */
+}
+
