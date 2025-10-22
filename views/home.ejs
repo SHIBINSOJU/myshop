@@ -3,7 +3,7 @@
 
 <main class="container">
   
-  <div class="hero-section" style="text-align: center; padding: 3rem 0; border-bottom: 1px solid var(--border-color);">
+  <div class="hero-section" style="text-align: center; padding: 3rem 0;">
     <h1 class="page-title" style="margin-bottom: 1rem;">Welcome to <%= brandName %></h1>
     <p style="text-align: center; font-size: 1.2rem; margin-bottom: 2rem; color: #555;">
       Your new one-stop shop for modern apparel.
@@ -13,21 +13,29 @@
     </a>
   </div>
 
-  <section class="featured-products" style="margin-top: 4rem;">
-    <h2 style="text-align: center; font-size: 1.8rem; margin-bottom: 2rem; font-weight: 700;">Featured Products</h2>
-    
-    <div class="product-grid">
-      <% if (locals.featuredProducts && featuredProducts.length > 0) { %>
-        <% featuredProducts.forEach(product => { %>
-          
-          <%- include('partials/product-card', { product: product }) %>
-
-        <% }) %>
-      <% } else { %>
-        <p style="text-align: center;">No featured products available at this time.</p>
-      <% } %>
-    </div>
-  </section>
-</main>
+  <% if (locals.categorySections && categorySections.length > 0) { %>
+    <% categorySections.forEach(section => { %>
+      <section class="category-section">
+        <h2 class="category-title">
+          <%= section.name.charAt(0).toUpperCase() + section.name.slice(1) %> Picks
+        </h2>
+        
+        <div class="product-grid">
+          <% section.products.forEach(product => { %>
+            <%- include('partials/product-card', { product: product }) %>
+          <% }) %>
+        </div>
+        
+        <a href="/products?category=<%= section.name %>" class="btn-view-all">
+          View all <%= section.name %> →
+        </a>
+      </section>
+    <% }) %>
+  <% } else { %>
+    <p style="text-align: center; margin-top: 4rem; font-size: 1.1rem;">
+      No products available at this time.
+    </p>
+  <% } %>
+  </main>
 
 <%- include('partials/footer') %>
