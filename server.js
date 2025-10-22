@@ -4,6 +4,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const User = require('./models/user'); // Import the User model
 
 // Import routes
@@ -22,6 +23,8 @@ mongoose.connect(process.env.MONGO_URI)
 // --- 2. Middleware ---
 // To parse form data from EJS pages
 app.use(express.urlencoded({ extended: true }));
+// To parse JSON request bodies (for AJAX requests like add-to-cart)
+app.use(express.json());
 // To serve static files (CSS, images, frontend JS)
 app.use(express.static('public'));
 
@@ -33,10 +36,15 @@ app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGO_URI,
+    collectionName: 'sessions',
+    ttl: 24 * 60 * 60
+  }),
   cookie: {
-    httpOnly: true, // Prevents client-side JS from accessing the cookie
-    secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
-    maxAge: 24 * 60 * 60 * 1000 // 1 day
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 24 * 60 * 60 * 1000
   }
 }));
 

@@ -8,6 +8,13 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     trim: true
   },
+  passwordHash: {
+    type: String,
+  },
+  isVerified: {
+    type: Boolean,
+    default: false
+  },
   firstName: {
     type: String,
     trim: true
