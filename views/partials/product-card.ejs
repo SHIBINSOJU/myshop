@@ -1,7 +1,9 @@
 <div class="product-card" id="card-<%= product._id %>">
 
   <div class="product-image">
-    <img src="<%= product.image %>" alt="<%= product.name %>">
+    <a href="/products/<%= product._id %>">
+      <img src="<%= product.image %>" alt="<%= product.name %>">
+    </a>
 
     <div class="product-rating-row">
       <span class="product-rating"><%= product.rating.toFixed(1) %> ★</span>
@@ -16,31 +18,16 @@
     </button>
   </div>
   
-  <div class="product-info">
+  <a href="/products/<%= product._id %>" class="product-info">
     <span class="product-brand"><%= product.brand %></span>
     <h3 class="product-name"><%= product.name %></h3>
-    <p class="product-description">
-      <%= product.description %>
-    </p>
-
+    
     <div class="product-price-row">
       <span class="product-price">$<%= product.price.toFixed(2) %></span>
       <% if (product.originalPrice && product.originalPrice > product.price) { %>
         <span class="product-original-price">$<%= product.originalPrice.toFixed(2) %></span>
-        <span class="product-discount">
-          (<%= Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) %>% off)
-        </span>
-      <% } %>
+        <% } %>
     </div>
-  </div>
+  </a>
   
-  <div class="product-actions">
-    <a 
-      href="https://instagram.com/YourBrandInstagram" 
-      target="_blank" 
-      class="btn-buy"
-    >
-      Buy Now
-    </a>
   </div>
-</div>
