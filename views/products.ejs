@@ -4,15 +4,29 @@
 <main class="container">
   <h1 class="page-title">All Products</h1>
 
-  <div class="filter-bar">
-    <select name="sort" id="sort">
-      <option value="default">Default Sorting</option>
-      <option value="price-low-high">Price: Low to High</option>
-      <option value="price-high-low">Price: High to Low</option>
-      <option value="rating">Rating: High to Low</option>
-    </select>
-  </div>
+  <form action="/products" method="GET" class="filter-bar" id="filter-form">
+    <div class="filter-group">
+      <label for="category">Filter by Category:</label>
+      <select name="category" id="category" class="filter-select">
+        <option value="">All Categories</option>
+        <% categories.forEach(cat => { %>
+          <option value="<%= cat %>" <%= (locals.currentCategory === cat) ? 'selected' : '' %>>
+            <%= cat.charAt(0).toUpperCase() + cat.slice(1) %>
+          </option>
+        <% }) %>
+      </select>
+    </div>
 
+    <div class="filter-group">
+      <label for="sort">Sort by:</label>
+      <select name="sort" id="sort" class="filter-select">
+        <option value="default" <%= (locals.currentSort === 'default') ? 'selected' : '' %>>Newest</option>
+        <option value="price-low-high" <%= (locals.currentSort === 'price-low-high') ? 'selected' : '' %>>Price: Low to High</option>
+        <option value="price-high-low" <%= (locals.currentSort === 'price-high-low') ? 'selected' : '' %>>Price: High to Low</option>
+        <option value="rating" <%= (locals.currentSort === 'rating') ? 'selected' : '' %>>Rating: High to Low</option>
+      </select>
+    </div>
+  </form>
   <div class="product-grid">
     <% if (products.length > 0) { %>
       <% products.forEach(product => { %>
@@ -46,7 +60,9 @@
         </div>
       <% }) %>
     <% } else { %>
-      <p>No products found.</p>
+      <p style="text-align: center; font-size: 1.1rem; grid-column: 1 / -1;">
+        No products found matching your criteria.
+      </p>
     <% } %>
   </div>
 </main>
