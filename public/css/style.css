@@ -497,3 +497,39 @@ img {
   color: #e53935; /* Red */
   font-weight: 700;
 }
+/* --- Homepage Category Sections --- */
+.category-section {
+  /* Add padding and a border to separate sections */
+  padding: 3rem 0;
+  border-top: 1px solid var(--border-color);
+}
+
+.hero-section {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.category-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+/* "View All" button style */
+.btn-view-all {
+  display: block;
+  width: fit-content;
+  margin: 2rem auto 0 auto;
+  padding: 0.6rem 1.2rem;
+  border: 1px solid var(--accent-color);
+  color: var(--accent-color);
+  font-weight: 700;
+  border-radius: 8px;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.btn-view-all:hover {
+  background-color: var(--accent-color);
+  color: #fff;
+}
