@@ -2,13 +2,55 @@
 <%- include('partials/navbar') %>
 
 <main class="container">
-  <h1 class="page-title">Welcome to <%= brandName %></h1>
-  <p style="text-align: center; font-size: 1.2rem; margin-bottom: 2rem;">
-    The best modern store.
-  </p>
-  <a href="/products" class="btn-submit" style="display: block; width: 200px; margin: auto; text-align: center;">
-    Shop Now
-  </a>
-</main>
+  
+  <div class="hero-section" style="text-align: center; padding: 3rem 0; border-bottom: 1px solid var(--border-color);">
+    <h1 class="page-title" style="margin-bottom: 1rem;">Welcome to <%= brandName %></h1>
+    <p style="text-align: center; font-size: 1.2rem; margin-bottom: 2rem; color: #555;">
+      Your new one-stop shop for modern apparel.
+    </p>
+    <a href="/products" class="btn-submit" style="display: inline-block; width: 200px; text-align: center;">
+      Shop Now
+    </a>
+  </div>
+
+  <section class="featured-products" style="margin-top: 4rem;">
+    <h2 style="text-align: center; font-size: 1.8rem; margin-bottom: 2rem; font-weight: 700;">Featured Products</h2>
+    
+    <div class="product-grid">
+      <% if (locals.featuredProducts && featuredProducts.length > 0) { %>
+        <% featuredProducts.forEach(product => { %>
+          <div class="product-card">
+            <div class="product-image">
+              <img src="<%= product.image %>" alt="<%= product.name %>">
+            </div>
+            <div class="product-info">
+              <span class="product-category"><%= product.category %></span>
+              <h3 class="product-name"><%= product.name %></h3>
+              <div class="product-rating">Rating: <%= product.rating %> ★</div>
+              <div class="product-price">$<%= product.price.toFixed(2) %></div>
+            </div>
+            <div class="product-actions">
+              <button 
+                class="btn-wishlist <%= (locals.user && user.wishlist.includes(product._id)) ? 'active' : '' %>" 
+                data-id="<%= product._id %>"
+              >
+                ♥
+              </button>
+              <a 
+                href="https://instagram.com/YourBrandInstagram" 
+                target="_blank" 
+                class="btn-buy"
+              >
+                Buy Now
+              </a>
+            </div>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <p style="text-align: center;">No featured products available at this time.</p>
+      <% } %>
+    </div>
+  </section>
+  </main>
 
 <%- include('partials/footer') %>
