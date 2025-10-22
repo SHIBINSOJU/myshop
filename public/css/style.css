@@ -167,3 +167,136 @@ img {
   margin-bottom: 1rem;
   text-align: center;
 }
+/* --- Page Layout --- */
+.container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.page-title {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-weight: 700;
+  font-size: 2.5rem;
+}
+
+/* --- Filter Bar --- */
+.filter-bar {
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.filter-bar select {
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  font-family: var(--font-primary);
+  background: #f9f9f9;
+}
+
+/* --- Product Grid --- */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.product-card {
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.product-image {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-info {
+  padding: 1rem;
+  flex-grow: 1;
+}
+
+.product-category {
+  font-size: 0.8rem;
+  color: #777;
+  text-transform: uppercase;
+}
+
+.product-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0.25rem 0;
+}
+
+.product-rating {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+
+.product-price {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--accent-color);
+}
+
+/* --- Product Actions --- */
+.product-actions {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 1px;
+  background-color: var(--border-color);
+  border-top: 1px solid var(--border-color);
+}
+
+.btn-wishlist, .btn-buy {
+  padding: 0.75rem;
+  text-align: center;
+  font-weight: 700;
+  cursor: pointer;
+  background-color: #fff;
+  transition: background-color 0.2s ease;
+}
+
+.btn-wishlist {
+  font-size: 1.5rem;
+  color: #ccc;
+  border: none;
+}
+
+.btn-wishlist:hover {
+  color: #ff6b6b;
+}
+
+.btn-wishlist.active {
+  color: #e53935; /* Red when active */
+}
+
+.btn-buy {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+.btn-buy:hover {
+  background-color: var(--accent-hover);
+}
