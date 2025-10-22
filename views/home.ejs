@@ -19,38 +19,15 @@
     <div class="product-grid">
       <% if (locals.featuredProducts && featuredProducts.length > 0) { %>
         <% featuredProducts.forEach(product => { %>
-          <div class="product-card">
-            <div class="product-image">
-              <img src="<%= product.image %>" alt="<%= product.name %>">
-            </div>
-            <div class="product-info">
-              <span class="product-category"><%= product.category %></span>
-              <h3 class="product-name"><%= product.name %></h3>
-              <div class="product-rating">Rating: <%= product.rating %> ★</div>
-              <div class="product-price">$<%= product.price.toFixed(2) %></div>
-            </div>
-            <div class="product-actions">
-              <button 
-                class="btn-wishlist <%= (locals.user && user.wishlist.includes(product._id)) ? 'active' : '' %>" 
-                data-id="<%= product._id %>"
-              >
-                ♥
-              </button>
-              <a 
-                href="https://instagram.com/YourBrandInstagram" 
-                target="_blank" 
-                class="btn-buy"
-              >
-                Buy Now
-              </a>
-            </div>
-          </div>
+          
+          <%- include('partials/product-card', { product: product }) %>
+
         <% }) %>
       <% } else { %>
         <p style="text-align: center;">No featured products available at this time.</p>
       <% } %>
     </div>
   </section>
-  </main>
+</main>
 
 <%- include('partials/footer') %>
