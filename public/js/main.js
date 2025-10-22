@@ -1,4 +1,15 @@
 document.addEventListener('DOMContentLoaded', () => {
+  
+  // --- Mobile Menu Toggle ---
+  const navbarToggle = document.querySelector('.navbar-toggle');
+  const navbarMenu = document.querySelector('.navbar-menu');
+
+  if (navbarToggle && navbarMenu) {
+    navbarToggle.addEventListener('click', () => {
+      // This adds/removes the "active" class we made in the CSS
+      navbarMenu.classList.toggle('active');
+    });
+  }
 
   // --- Wishlist Toggle ---
   const wishlistButtons = document.querySelectorAll('.btn-wishlist');
@@ -16,9 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (!response.ok) {
-          // If not logged in, the server redirect (handled by auth)
-          // will be caught here, but easiest is to just reload.
-          // Or server sends 401/403
           if (response.status === 401 || response.status === 403) {
              window.location.href = '/login';
              return;
@@ -29,11 +37,26 @@ document.addEventListener('DOMContentLoaded', () => {
         const result = await response.json();
 
         if (result.success) {
-          // Toggle the 'active' class on the button
           if (result.action === 'added') {
             button.classList.add('active');
           } else {
             button.classList.remove('active');
+
+            // --- THIS IS THE UPDATE ---
+            // If we are on the wishlist page, make the card disappear
+            if (window.location.pathname === '/wishlist') {
+              // Find the closest parent '.product-card' and hide it
+              const card = button.closest('.product-card');
+              if (card) {
+                card.style.transition = 'opacity 0.3s ease';
+                card.style.opacity = '0';
+                // Hide after fade out
+                setTimeout(() => {
+                  card.style.display = 'none'; 
+                }, 300);
+              }
+            }
+            // --- END OF UPDATE ---
           }
         }
 
