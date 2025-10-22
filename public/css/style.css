@@ -287,6 +287,7 @@ img {
   width: 100%;
   aspect-ratio: 1 / 1;
   overflow: hidden;
+  position: relative; /* PARENT FOR OVERLAYS */
 }
 
 .product-image img {
@@ -298,8 +299,13 @@ img {
 .product-info {
   padding: 1rem;
   flex-grow: 1;
-  display: flex;
-  flex-direction: column;
+  display: block; /* MAKE THE <a> TAG A BLOCK */
+  color: var(--text-dark);
+  border-top: 1px solid var(--border-color); /* SEPARATOR */
+}
+
+.product-info:hover .product-name {
+  color: var(--accent-color);
 }
 
 .product-brand {
@@ -315,6 +321,7 @@ img {
   font-weight: 500;
   margin: 0;
   color: var(--text-dark);
+  transition: color 0.2s ease;
 }
 
 .product-description {
@@ -327,24 +334,7 @@ img {
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  min-height: 2.7em; /* 0.9rem * 1.5 line-height * 2 lines */
-}
-
-.product-rating-row {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: auto; /* Pushes price to bottom */
-  padding-top: 0.75rem; /* Space from description */
-}
-
-.product-rating {
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: #1a1a1a;
-  background-color: var(--bg-light);
-  padding: 0.1rem 0.4rem;
-  border-radius: 4px;
+  min-height: 2.7em;
 }
 
 .product-num-ratings {
@@ -379,54 +369,94 @@ img {
 
 /* --- Product Actions --- */
 .product-actions {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 1px;
-  background-color: var(--border-color);
-  border-top: 1px solid var(--border-color);
+  display: none; /* HIDE THE OLD ACTION BAR */
 }
 
-.btn-wishlist,
+/* This rule is kept for other buttons (like on detail page) */
 .btn-buy {
   padding: 0.75rem;
   text-align: center;
   font-weight: 700;
   cursor: pointer;
-  background-color: #fff;
-  transition: background-color 0.2s ease;
-  border: none;
-}
-
-.btn-wishlist {
-  font-size: 1.5rem;
-  color: #ccc;
-}
-
-.btn-wishlist:hover {
-  color: #ff6b6b;
-}
-
-.btn-wishlist.active {
-  color: #e53935; /* Red when active */
-}
-
-.btn-buy {
   background-color: var(--accent-color);
   color: white;
+  transition: background-color 0.2s ease;
+  border: none;
 }
 
 .btn-buy:hover {
   background-color: var(--accent-hover);
 }
 
+
+/* --- Product Card Overlays --- */
+
+/* Rating Overlay (Bottom-Left) */
+.product-rating-row {
+  position: absolute;
+  bottom: 0.5rem;
+  left: 0.5rem;
+  z-index: 10;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.product-rating {
+  background-color: rgba(26, 26, 26, 0.75);
+  color: #ffffff;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.product-rating-row .product-num-ratings {
+  display: none; /* Hide (num ratings) on card */
+}
+
+/* Wishlist Button Overlay (Top-Right) */
+.btn-wishlist {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 10;
+  
+  background-color: rgba(255, 255, 255, 0.85);
+  color: #1a1a1a;
+  border-radius: 50%;
+  height: 36px;
+  width: 36px;
+  font-size: 1.2rem;
+  line-height: 36px;
+  text-align: center;
+  padding: 0;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-wishlist:hover {
+  background-color: #fff;
+  color: #ff6b6b;
+  transform: scale(1.1);
+}
+
+.btn-wishlist.active {
+  background-color: #e53935;
+  color: #fff;
+}
+
+
 /* --- Mobile Responsive --- */
 @media (max-width: 768px) {
   /* --- Navbar --- */
   .navbar-menu {
-    display: none; /* Hide the menu by default */
-    flex-direction: column; /* Stack links vertically */
+    display: none;
+    flex-direction: column;
     position: absolute;
-    top: 65px; /* Position below the navbar */
+    top: 65px;
     left: 0;
     width: 100%;
     background-color: var(--bg-color);
@@ -434,7 +464,6 @@ img {
     padding: 1rem 0;
   }
 
-  /* This class will be toggled by JavaScript */
   .navbar-menu.active {
     display: flex;
   }
@@ -452,7 +481,7 @@ img {
   }
 
   .navbar-toggle {
-    display: block; /* Show the hamburger icon */
+    display: block;
   }
 
   /* --- Forms --- */
@@ -463,8 +492,8 @@ img {
 
   /* --- Products --- */
   .product-grid {
-    grid-template-columns: 1fr 1fr; /* Show two columns on mobile */
-    gap: 1rem; /* Smaller gap for mobile */
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
   }
 
   .page-title {
@@ -485,80 +514,3 @@ img {
     width: 100%;
   }
 }
-
-/* --- Product Rating Overlay --- */
-
-.product-image {
-  position: relative; /* Makes it the parent for the overlay */
-}
-
-/* This is the div you moved */
-.product-rating-row {
-  position: absolute;
-  bottom: 0.5rem; /* 8px from bottom */
-  left: 0.5rem;   /* 8px from left */
-  z-index: 10;
-
-  /* Resets old spacing rules */
-  margin-top: 0;
-  padding-top: 0;
-
-  /* Hide the (num ratings) part if it exists */
-  .product-num-ratings {
-    display: none;
-  }
-}
-
-/* New style for the rating itself to be readable on an image */
-.product-rating {
-  background-color: rgba(26, 26, 26, 0.75); /* Dark, semi-transparent background */
-  color: #ffffff; /* White text */
-  padding: 0.25rem 0.6rem;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  font-weight: 700;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* --- Wishlist Button Overlay --- */
-
-.btn-wishlist {
-  position: absolute;
-  top: 0.5rem;   /* 8px from top */
-  right: 0.5rem;  /* 8px from right */
-  z-index: 10;
-  
-  /* New overlay styling */
-  background-color: rgba(255, 255, 255, 0.85); /* White, semi-transparent background */
-  color: #1a1a1a; /* Dark text */
-  border-radius: 50%; /* Make it a circle */
-  height: 36px;
-  width: 36px;
-  font-size: 1.2rem;
-  line-height: 36px; /* Helps center the heart */
-  text-align: center;
-  padding: 0;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s ease;
-}
-
-.btn-wishlist:hover {
-  background-color: #fff;
-  color: #ff6b6b; /* Red heart on hover */
-  transform: scale(1.1);
-}
-
-.btn-wishlist.active {
-  background-color: #e53935; /* Red background when active */
-  color: #fff; /* White heart */
-}
-
-
-/* --- Update Product Actions --- */
-
-.product-actions {
-  /* This now only has one button */
-  grid-template-columns: 1fr; /* Make "Buy Now" fill the width */
-  gap: 0; /* Remove gap */
-  }
