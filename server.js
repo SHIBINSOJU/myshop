@@ -9,6 +9,7 @@ const User = require('./models/user'); // Import the User model
 // Import routes
 const authRoutes = require('./routes/auth');
 const storeRoutes = require('./routes/store');
+const adminRoutes = require('./routes/admin'); // Import admin routes
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -66,13 +67,13 @@ app.use(async (req, res, next) => {
 // Use the route files
 app.use('/', authRoutes);
 app.use('/', storeRoutes);
+app.use('/', adminRoutes); // Use admin routes
 
 // 404 Page (Must be at the end)
 app.use((req, res) => {
   res.status(404).render('404', { 
-    title: "Not Found",
-    brandName: "YourBrandName" 
-    // user is already available from our middleware
+    title: "Not Found"
+    // brandName and user are already available from our middleware
   });
 });
 
