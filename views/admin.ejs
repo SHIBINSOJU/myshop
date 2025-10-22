@@ -1,65 +1,306 @@
-<%- include('partials/header', { title: 'Admin' }) %>
-<%- include('partials/navbar') %>
+<%- include('partials/header', { title: 'Admin Panel' }) %>
 
-<main class="container">
-  <h1 class="page-title">Admin Panel</h1>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <% if (locals.message) { %>
-    <p style="text-align: center; color: var(--accent-color); font-weight: bold;"><%= message %></p>
-  <% } %>
+<div class="admin-layout">
+  <!-- Sidebar Navigation -->
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar-header">
+      <h2><i class="fas fa-store"></i> Admin Panel</h2>
+    </div>
+    <nav class="admin-nav">
+      <a href="#dashboard" class="admin-nav-item active" data-section="dashboard">
+        <i class="fas fa-tachometer-alt"></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="#products" class="admin-nav-item" data-section="products">
+        <i class="fas fa-box"></i>
+        <span>Products</span>
+      </a>
+      <a href="#orders" class="admin-nav-item" data-section="orders">
+        <i class="fas fa-shopping-cart"></i>
+        <span>Orders</span>
+      </a>
+      <a href="#customers" class="admin-nav-item" data-section="customers">
+        <i class="fas fa-users"></i>
+        <span>Customers</span>
+      </a>
+      <a href="#categories" class="admin-nav-item" data-section="categories">
+        <i class="fas fa-tags"></i>
+        <span>Categories</span>
+      </a>
+      <a href="#discounts" class="admin-nav-item" data-section="discounts">
+        <i class="fas fa-gift"></i>
+        <span>Discounts</span>
+      </a>
+      <a href="#settings" class="admin-nav-item" data-section="settings">
+        <i class="fas fa-cog"></i>
+        <span>Settings</span>
+      </a>
+      <a href="#analytics" class="admin-nav-item" data-section="analytics">
+        <i class="fas fa-chart-bar"></i>
+        <span>Analytics</span>
+      </a>
+    </nav>
+  </aside>
 
-  <div class="form-container" style="margin-top: 2rem;">
-    <h2>Add New Product</h2>
-    <form action="/admin/add-product" method="POST">
+  <!-- Main Content Area -->
+  <main class="admin-main">
+    <% if (locals.message) { %>
+      <div class="admin-alert admin-alert-success">
+        <i class="fas fa-check-circle"></i>
+        <%= message %>
+      </div>
+    <% } %>
+
+    <!-- Dashboard Section -->
+    <section id="dashboard-section" class="admin-section active">
+      <div class="admin-header">
+        <h1><i class="fas fa-tachometer-alt"></i> Dashboard</h1>
+      </div>
+
+      <div class="dashboard-widgets">
+        <!-- Sales Summary Widget -->
+        <div class="dashboard-widget">
+          <div class="widget-header">
+            <h3>Sales Summary</h3>
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <div class="widget-content">
+            <div class="chart-placeholder">
+              <i class="fas fa-chart-area" style="font-size: 3rem; color: #ccc;"></i>
+              <p>Chart visualization will be displayed here</p>
+              <small>Data endpoint: /api/admin/sales-summary</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- New Orders Widget -->
+        <div class="dashboard-widget">
+          <div class="widget-header">
+            <h3>New Orders</h3>
+            <a href="/admin/orders" class="widget-link">View All <i class="fas fa-arrow-right"></i></a>
+          </div>
+          <div class="widget-content">
+            <div class="widget-list">
+              <div class="widget-list-item">
+                <i class="fas fa-shopping-bag"></i>
+                <span>Order tracking and management will appear here</span>
+              </div>
+              <div class="widget-list-empty">
+                <p>No new orders</p>
+                <small>Data endpoint: /api/admin/new-orders</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Low Stock Alerts Widget -->
+        <div class="dashboard-widget">
+          <div class="widget-header">
+            <h3>Low Stock Alerts</h3>
+            <a href="/admin/products?status=low_stock" class="widget-link">View All <i class="fas fa-arrow-right"></i></a>
+          </div>
+          <div class="widget-content">
+            <div class="widget-list">
+              <div class="widget-list-item">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>Low stock products will be listed here</span>
+              </div>
+              <div class="widget-list-empty">
+                <p>No low stock alerts</p>
+                <small>Data endpoint: /api/admin/stock-alerts</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products-section" class="admin-section">
+      <div class="admin-header">
+        <h1><i class="fas fa-box"></i> Product Management</h1>
+      </div>
+
+      <div class="admin-card">
+        <h2>Add New Product</h2>
+        <form action="/admin/add-product" method="POST" enctype="multipart/form-data" class="admin-form">
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Product Name <span class="required">*</span></label>
+              <input type="text" id="name" name="name" class="form-input" placeholder="e.g., Sleek White Hoodie" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="description">Description</label>
+              <textarea id="description" name="description" class="form-textarea" rows="4" placeholder="A brief description of the product."></textarea>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="price">Price <span class="required">*</span></label>
+              <input type="number" id="price" name="price" class="form-input" min="0" step="0.01" placeholder="0.00" required>
+            </div>
+
+            <div class="form-group">
+              <label for="category">Category <span class="required">*</span></label>
+              <input type="text" id="category" name="category" class="form-input" placeholder="e.g., Hoodies, T-Shirts" required>
+              <small class="form-help">Category selection will be enhanced with dropdown</small>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="stock">Stock Quantity <span class="required">*</span></label>
+              <input type="number" id="stock" name="stock" class="form-input" min="0" placeholder="0" required>
+            </div>
+
+            <div class="form-group">
+              <label for="brand">Brand</label>
+              <input type="text" id="brand" name="brand" class="form-input" placeholder="Brand name">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="images">Product Images</label>
+              <input type="file" id="images" name="images" class="form-input-file" multiple accept="image/*">
+              <small class="form-help">Select multiple images (temporary: use Image URL below)</small>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="image">Image URL (temporary)</label>
+              <input type="url" id="image" name="image" class="form-input" placeholder="https://example.com/image.jpg">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="originalPrice">Original Price (Optional)</label>
+              <input type="number" id="originalPrice" name="originalPrice" class="form-input" min="0" step="0.01" placeholder="0.00">
+            </div>
+
+            <div class="form-group">
+              <label for="rating">Rating (Optional)</label>
+              <input type="number" id="rating" name="rating" class="form-input" min="0" max="5" step="0.1" placeholder="4.5">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="numRatings">Number of Ratings (Optional)</label>
+              <input type="number" id="numRatings" name="numRatings" class="form-input" min="0" placeholder="100">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group-checkbox">
+              <input type="checkbox" id="isFeatured" name="isFeatured" class="form-checkbox">
+              <label for="isFeatured">Featured Product</label>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-admin-primary">
+              <i class="fas fa-plus-circle"></i> Add Product
+            </button>
+            <button type="reset" class="btn-admin-secondary">
+              <i class="fas fa-redo"></i> Reset Form
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Placeholder Sections for Other Menu Items -->
+    <section id="orders-section" class="admin-section">
+      <div class="admin-header">
+        <h1><i class="fas fa-shopping-cart"></i> Orders</h1>
+      </div>
+      <div class="admin-card">
+        <p>Order management interface coming soon...</p>
+      </div>
+    </section>
+
+    <section id="customers-section" class="admin-section">
+      <div class="admin-header">
+        <h1><i class="fas fa-users"></i> Customers</h1>
+      </div>
+      <div class="admin-card">
+        <p>Customer management interface coming soon...</p>
+      </div>
+    </section>
+
+    <section id="categories-section" class="admin-section">
+      <div class="admin-header">
+        <h1><i class="fas fa-tags"></i> Categories</h1>
+      </div>
+      <div class="admin-card">
+        <p>Category management interface coming soon...</p>
+      </div>
+    </section>
+
+    <section id="discounts-section" class="admin-section">
+      <div class="admin-header">
+        <h1><i class="fas fa-gift"></i> Discounts</h1>
+      </div>
+      <div class="admin-card">
+        <p>Discount management interface coming soon...</p>
+      </div>
+    </section>
+
+    <section id="settings-section" class="admin-section">
+      <div class="admin-header">
+        <h1><i class="fas fa-cog"></i> Settings</h1>
+      </div>
+      <div class="admin-card">
+        <p>Settings interface coming soon...</p>
+      </div>
+    </section>
+
+    <section id="analytics-section" class="admin-section">
+      <div class="admin-header">
+        <h1><i class="fas fa-chart-bar"></i> Analytics</h1>
+      </div>
+      <div class="admin-card">
+        <p>Analytics dashboard coming soon...</p>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+// Admin panel navigation functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const navItems = document.querySelectorAll('.admin-nav-item');
+  const sections = document.querySelectorAll('.admin-section');
+
+  navItems.forEach(item => {
+    item.addEventListener('click', function(e) {
+      e.preventDefault();
       
-      <div class="form-group">
-        <label for="name">Product Name</label>
-        <input type="text" id="name" name="name" class="form-input" required>
-      </div>
+      // Remove active class from all nav items
+      navItems.forEach(nav => nav.classList.remove('active'));
       
-      <div class="form-group">
-        <label for="brand">Brand</label>
-        <input type="text" id="brand" name="brand" class="form-input" required>
-      </div>
+      // Add active class to clicked item
+      this.classList.add('active');
       
-      <div class="form-group">
-        <label for="description">Short Description (max 100 chars)</label>
-        <input type="text" id="description" name="description" class="form-input" required maxlength="100">
-      </div>
-
-      <div class="form-group">
-        <label for="image">Image URL</label>
-        <input type="url" id="image" name="image" class="form-input" required>
-      </div>
-
-      <div class="form-group">
-        <label for="price">Price (e.g., 29.99)</label>
-        <input type="number" id="price" name="price" step="0.01" class="form-input" required>
-      </div>
-
-      <div class="form-group">
-        <label for="originalPrice">Original Price (Optional, for strikethrough)</label>
-        <input type="number" id="originalPrice" name="originalPrice" step="0.01" class="form-input">
-      </div>
-
-      <div class="form-group">
-        <label for="category">Category</label>
-        <input type="text" id="category" name="category" class="form-input" required>
-      </div>
+      // Hide all sections
+      sections.forEach(section => section.classList.remove('active'));
       
-      <div class="form-group">
-        <label for="rating">Rating (Optional, e.g., 4.7)</label>
-        <input type="number" id="rating" name="rating" step="0.1" min="0" max="5" class="form-input">
-      </div>
-
-      <div class="form-group">
-        <label for="numRatings">Number of Ratings (Optional, e.g., 250)</label>
-        <input type="number" id="numRatings" name="numRatings" class="form-input">
-      </div>
-
-      <button type="submit" class="btn-submit">Add Product</button>
-    </form>
-  </div>
-</main>
+      // Show selected section
+      const sectionId = this.getAttribute('data-section') + '-section';
+      document.getElementById(sectionId).classList.add('active');
+    });
+  });
+});
+</script>
 
 <%- include('partials/footer') %>
