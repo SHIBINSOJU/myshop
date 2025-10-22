@@ -1,4 +1,31 @@
 document.addEventListener('DOMContentLoaded', () => {
+
+  // --- Form Loading State ---
+  const allForms = document.querySelectorAll('form');
+  allForms.forEach(form => {
+    // Exclude the filter form from this logic
+    if (form.id === 'filter-form') return; 
+    
+    form.addEventListener('submit', (e) => {
+      const submitButton = form.querySelector('button[type="submit"]');
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = 'Loading...';
+      }
+    });
+  });
+
+  // --- NEW: Product Filter Auto-Submit ---
+  const filterForm = document.querySelector('#filter-form');
+  const filterSelects = document.querySelectorAll('.filter-select');
+
+  if (filterForm && filterSelects.length > 0) {
+    filterSelects.forEach(select => {
+      select.addEventListener('change', () => {
+        filterForm.submit(); // Submit the form when a dropdown changes
+      });
+    });
+  }
   
   // --- Mobile Menu Toggle ---
   const navbarToggle = document.querySelector('.navbar-toggle');
@@ -6,7 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (navbarToggle && navbarMenu) {
     navbarToggle.addEventListener('click', () => {
-      // This adds/removes the "active" class we made in the CSS
       navbarMenu.classList.toggle('active');
     });
   }
@@ -19,6 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const productId = button.dataset.id;
       
       try {
+        // Disable button to prevent double-click
+        button.disabled = true; 
+
         const response = await fetch(`/wishlist/toggle/${productId}`, {
           method: 'POST',
           headers: {
@@ -42,26 +71,23 @@ document.addEventListener('DOMContentLoaded', () => {
           } else {
             button.classList.remove('active');
 
-            // --- THIS IS THE UPDATE ---
-            // If we are on the wishlist page, make the card disappear
             if (window.location.pathname === '/wishlist') {
-              // Find the closest parent '.product-card' and hide it
               const card = button.closest('.product-card');
               if (card) {
                 card.style.transition = 'opacity 0.3s ease';
                 card.style.opacity = '0';
-                // Hide after fade out
                 setTimeout(() => {
                   card.style.display = 'none'; 
                 }, 300);
               }
             }
-            // --- END OF UPDATE ---
           }
         }
-
       } catch (error) {
         console.error('Error toggling wishlist:', error);
+      } finally {
+        // Re-enable button after action is complete
+        button.disabled = false; 
       }
     });
   });
