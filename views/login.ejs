@@ -1,23 +1,111 @@
 <%- include('partials/header', { title: 'Login' }) %>
 <%- include('partials/navbar') %>
 
+<style>
+  /* Basic Tab Styling */
+  .tabs {
+    display: flex;
+    border-bottom: 2px solid #ddd;
+    margin-bottom: 1.5rem;
+  }
+  .tab-button {
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+    font-size: 1rem;
+    position: relative;
+    color: #555;
+  }
+  .tab-button.active {
+    color: #000;
+    font-weight: 600;
+  }
+  .tab-button.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: #007bff;
+  }
+  .tab-content {
+    display: none;
+  }
+  .tab-content.active {
+    display: block;
+  }
+</style>
+
 <main class="form-container">
   <h1>Log In</h1>
-  <p style="text-align: center; margin-bottom: 1.5rem; color: #555;">
-    Enter your email to receive a One-Time Password (OTP).
-  </p>
-  
+
   <% if (locals.error) { %>
     <div class="error-message"><%= error %></div>
   <% } %>
 
-  <form action="/send-otp" method="POST">
-    <div class="form-group">
-      <label for="email">Email Address</label>
-      <input type="email" id="email" name="email" class="form-input" required>
-    </div>
-    <button type="submit" class="btn-submit">Send OTP</button>
-  </form>
+  <div class="tabs">
+    <button class="tab-button active" onclick="showTab('password')">Login with Password</button>
+    <button class="tab-button" onclick="showTab('otp')">Login with OTP</button>
+  </div>
+
+  <!-- Password Login Form -->
+  <div id="password" class="tab-content active">
+    <form action="/login/password" method="POST">
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" class="form-input" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" class="form-input" required>
+      </div>
+      <button type="submit" class="btn-submit">Login</button>
+    </form>
+    <p class="form-switch-text">Don't have a password? <a href="/signup">Sign up</a>.</p>
+  </div>
+
+  <!-- OTP Login Form -->
+  <div id="otp" class="tab-content">
+     <p style="text-align: center; margin-bottom: 1.5rem; color: #555;">
+        Enter your email to receive a One-Time Password (OTP).
+     </p>
+    <form action="/send-otp" method="POST">
+      <div class="form-group">
+        <label for="otp-email">Email Address</label>
+        <input type="email" id="otp-email" name="email" class="form-input" required>
+      </div>
+      <button type="submit" class="btn-submit">Send OTP</button>
+    </form>
+  </div>
+
 </main>
+
+<script>
+  function showTab(tabName) {
+    // Hide all tab content
+    const tabContents = document.querySelectorAll('.tab-content');
+    tabContents.forEach(content => {
+      content.classList.remove('active');
+    });
+
+    // Deactivate all tab buttons
+    const tabButtons = document.querySelectorAll('.tab-button');
+    tabButtons.forEach(button => {
+      button.classList.remove('active');
+    });
+
+    // Show the selected tab content and activate the button
+    document.getElementById(tabName).classList.add('active');
+    event.currentTarget.classList.add('active');
+  }
+
+  // Show the first tab by default
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('password').classList.add('active');
+    document.querySelector('.tab-button').classList.add('active');
+  });
+</script>
 
 <%- include('partials/footer') %>
