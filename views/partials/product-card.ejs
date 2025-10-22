@@ -1,6 +1,19 @@
 <div class="product-card" id="card-<%= product._id %>">
+
   <div class="product-image">
     <img src="<%= product.image %>" alt="<%= product.name %>">
+
+    <div class="product-rating-row">
+      <span class="product-rating"><%= product.rating.toFixed(1) %> ★</span>
+    </div>
+
+    <button 
+      class="btn-wishlist <%= (locals.user && user.wishlist.includes(product._id)) ? 'active' : '' %>" 
+      data-id="<%= product._id %>"
+      title="Add to Wishlist"
+    >
+      ♥
+    </button>
   </div>
   
   <div class="product-info">
@@ -10,13 +23,6 @@
       <%= product.description %>
     </p>
 
-    <div class="product-rating-row">
-      <span class="product-rating"><%= product.rating.toFixed(1) %> ★</span>
-      <% if (product.numRatings > 0) { %>
-        <span class="product-num-ratings">(<%= product.numRatings.toLocaleString() %>)</span>
-      <% } %>
-    </div>
-    
     <div class="product-price-row">
       <span class="product-price">$<%= product.price.toFixed(2) %></span>
       <% if (product.originalPrice && product.originalPrice > product.price) { %>
@@ -29,13 +35,6 @@
   </div>
   
   <div class="product-actions">
-    <button 
-      class="btn-wishlist <%= (locals.user && user.wishlist.includes(product._id)) ? 'active' : '' %>" 
-      data-id="<%= product._id %>"
-    >
-      ♥
-    </button>
-    
     <a 
       href="https://instagram.com/YourBrandInstagram" 
       target="_blank" 
