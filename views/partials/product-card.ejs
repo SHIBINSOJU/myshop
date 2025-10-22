@@ -1,61 +1,61 @@
-<div class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden group relative" id="card-<%= product._id %>">
-  <!-- Product Image -->
+<% const _showButtons = (typeof showButtons !== 'undefined') ? showButtons : false; %>
+<div class="product-card bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden group relative" id="card-<%= product._id %>">
+  <!-- Image -->
   <div class="relative">
     <a href="/product/<%= product._id %>" class="block">
-      <img src="<%= product.image %>" alt="<%= product.name %>" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+      <img src="<%= product.image %>" alt="<%= product.name %>" class="w-full h-44 object-cover group-hover:scale-[1.02] transition-transform duration-300" loading="lazy">
     </a>
+    <!-- Wishlist button (kept at top-right) -->
     <button 
-      class="absolute top-2 right-2 text-gray-400 hover:text-red-500 transition-colors duration-200 bg-white rounded-full p-2 shadow-md <%= (locals.user && user.wishlist.includes(product._id)) ? 'text-red-500' : '' %>" 
+      class="btn-wishlist absolute top-2 right-2 text-gray-400 hover:text-red-500 transition-colors duration-200 bg-white rounded-full p-2 shadow-md <%= (locals.user && user.wishlist.includes(product._id)) ? 'active text-red-500' : '' %>" 
       data-id="<%= product._id %>"
+      aria-label="Toggle wishlist"
       title="Add to Wishlist"
     >
       <i class="fas fa-heart"></i>
     </button>
     <% if (product.originalPrice && product.originalPrice > product.price) { %>
-      <div class="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+      <div class="absolute top-2 left-2 bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded">
         -<%= Math.round((1 - product.price / product.originalPrice) * 100) %>%
       </div>
     <% } %>
-    <div class="absolute bottom-2 left-2 bg-white bg-opacity-90 px-2 py-1 rounded text-sm font-semibold">
+    <div class="absolute bottom-2 left-2 bg-white/90 px-2 py-0.5 rounded text-[12px] font-semibold">
       <%= product.rating.toFixed(1) %> ★
     </div>
   </div>
-  
-  <!-- Product Info -->
-  <div class="p-4">
-    <div class="text-sm text-gray-500 mb-1"><%= product.brand %></div>
+
+  <!-- Info -->
+  <div class="p-3">
+    <% if (product.brand) { %>
+      <div class="text-[12px] text-gray-500 mb-1 truncate"><%= product.brand %></div>
+    <% } %>
     <a href="/product/<%= product._id %>" class="block">
-      <h3 class="font-semibold text-lg text-gray-800 mt-2 hover:text-emerald-500 transition-colors duration-200 line-clamp-2">
+      <h3 class="product-name font-semibold text-[15px] text-gray-800 hover:text-emerald-600 transition-colors duration-150 line-clamp-2 min-h-[38px]">
         <%= product.name %>
       </h3>
     </a>
-    <p class="text-gray-600 text-sm mt-2 line-clamp-2">
-      <%= product.description %>
-    </p>
-    
+
     <!-- Price -->
-    <div class="flex items-center justify-between mt-4 mb-4">
-      <div class="flex items-center space-x-2">
-        <span class="text-emerald-600 font-bold text-xl">$<%= product.price.toFixed(2) %></span>
-        <% if (product.originalPrice && product.originalPrice > product.price) { %>
-          <span class="text-gray-400 line-through text-sm">$<%= product.originalPrice.toFixed(2) %></span>
-        <% } %>
+    <div class="flex items-baseline gap-2 mt-2">
+      <span class="text-emerald-600 font-bold text-[18px]"><%= formatPrice(product.price) %></span>
+      <% if (product.originalPrice && product.originalPrice > product.price) { %>
+        <span class="text-gray-400 line-through text-[12px]"><%= formatPrice(product.originalPrice) %></span>
+      <% } %>
+    </div>
+
+    <% if (_showButtons) { %>
+      <div class="flex items-center gap-2 mt-3">
+        <button class="btn-add-cart flex-1 bg-gray-100 hover:bg-emerald-500 hover:text-white text-gray-700 font-medium py-2 px-3 rounded-full transition-colors duration-200 flex items-center justify-center gap-2" data-product-id="<%= product._id %>">
+          <i class="fas fa-shopping-cart"></i>
+          <span>Add to Cart</span>
+        </button>
+        <a 
+          href="https://instagram.com/YourBrandInstagram" 
+          target="_blank" 
+          class="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-full transition-colors duration-200">
+          Buy Now
+        </a>
       </div>
-    </div>
-    
-    <!-- Actions -->
-    <div class="flex space-x-2">
-      <button class="flex-1 bg-gray-100 hover:bg-emerald-500 hover:text-white text-gray-700 font-bold py-2 px-4 rounded-full transition-colors duration-300 flex items-center justify-center space-x-2" data-product-id="<%= product._id %>">
-        <i class="fas fa-shopping-cart"></i>
-        <span>Add to Cart</span>
-      </button>
-      <a 
-        href="https://instagram.com/YourBrandInstagram" 
-        target="_blank" 
-        class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300 flex items-center justify-center"
-      >
-        Buy Now
-      </a>
-    </div>
+    <% } %>
   </div>
 </div>
