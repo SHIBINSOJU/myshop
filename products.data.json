@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Modern Neon Tee",
+    "image": "https://i.imgur.com/example.png",
+    "price": 29.99,
+    "category": "apparel",
+    "rating": 4.8
+  },
+  {
+    "name": "Sleek White Hoodie",
+    "image": "https://i.imgur.com/example2.png",
+    "price": 59.99,
+    "category": "apparel",
+    "rating": 4.6
+  },
+  {
+    "name": "Cyber Green Cap",
+    "image": "https://i.imgur.com/example3.png",
+    "price": 24.99,
+    "category": "accessories",
+    "rating": 4.3
+  },
+  {
+    "name": "Minimalist Sneakers",
+    "image": "https://i.imgur.com/example4.png",
+    "price": 89.99,
+    "category": "footwear",
+    "rating": 4.7
+  },
+  {
+    "name": "Techwear Joggers",
+    "image": "https://i.imgur.com/example5.png",
+    "price": 64.99,
+    "category": "apparel",
+    "rating": 4.5
+  },
+  {
+    "name": "Future Tote Bag",
+    "image": "https://i.imgur.com/example6.png",
+    "price": 34.99,
+    "category": "accessories",
+    "rating": 4.4
+  }
+]
