@@ -14,8 +14,22 @@ const isAuthenticated = (req, res, next) => {
 // --- Public Routes ---
 
 // Home Page
-router.get('/', (req, res) => {
-  res.render('home', { title: 'Home' });
+router.get('/', async (req, res) => {
+  try {
+    // Fetch 4 featured products (sorted by highest rating)
+    const featuredProducts = await Product.find()
+      .sort({ rating: -1 }) // Sort by rating descending
+      .limit(4); // Get the top 4
+
+    res.render('home', {
+      title: 'Home',
+      featuredProducts: featuredProducts // Pass products to the page
+    });
+  } catch (error) {
+    console.error("Error fetching featured products:", error);
+    // Still render the page, just with no products
+    res.render('home', { title: 'Home', featuredProducts: [] });
+  }
 });
 
 // Contact Page
@@ -25,16 +39,41 @@ router.get('/contact', (req, res) => {
 
 // --- Protected Routes ---
 
-// Products Page
+// Products Page (NOW WITH FILTERS)
 router.get('/products', isAuthenticated, async (req, res) => {
   try {
-    // Fetch all products from MongoDB
-    const products = await Product.find();
+    // --- Filter & Sort Logic ---
+    const { category, sort } = req.query;
     
-    // We pass the products to the EJS page
+    let filterQuery = {};
+    if (category) {
+      filterQuery.category = category;
+    }
+
+    let sortQuery = {};
+    if (sort === 'price-low-high') {
+      sortQuery = { price: 1 };
+    } else if (sort === 'price-high-low') {
+      sortQuery = { price: -1 };
+    } else if (sort === 'rating') {
+      sortQuery = { rating: -1 };
+    } else {
+      sortQuery = { createdAt: -1 }; // Default: newest
+    }
+    // --- End Logic ---
+
+    // Fetch all products matching the filter
+    const products = await Product.find(filterQuery).sort(sortQuery);
+    
+    // Fetch all unique categories to populate the filter dropdown
+    const categories = await Product.distinct('category');
+    
     res.render('products', {
       title: 'Products',
-      products: products 
+      products: products,
+      categories: categories,
+      currentCategory: category, // Pass current filter
+      currentSort: sort // Pass current sort
     });
   } catch (error) {
     console.error(error);
@@ -70,16 +109,13 @@ router.post('/wishlist/toggle/:productId', isAuthenticated, async (req, res) => 
       return res.status(404).json({ success: false, message: 'User not found.' });
     }
 
-    // Check if product is already in the wishlist
     const index = user.wishlist.indexOf(productId);
     let action;
 
     if (index > -1) {
-      // Product exists, so remove it
       user.wishlist.pull(productId);
       action = 'removed';
     } else {
-      // Product doesn't exist, so add it
       user.wishlist.push(productId);
       action = 'added';
     }
@@ -95,4 +131,3 @@ router.post('/wishlist/toggle/:productId', isAuthenticated, async (req, res) => 
 });
 
 module.exports = router;
-
