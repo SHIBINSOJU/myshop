@@ -13,22 +13,38 @@ const isAuthenticated = (req, res, next) => {
 
 // --- Public Routes ---
 
-// Home Page
+// Home Page (NEW CATEGORY-BASED)
 router.get('/', async (req, res) => {
   try {
-    // Fetch 4 featured products (sorted by highest rating)
-    const featuredProducts = await Product.find()
-      .sort({ rating: -1 }) // Sort by rating descending
-      .limit(4); // Get the top 4
+    // Manually define which categories to feature on the homepage
+    const featuredCategories = ['apparel', 'accessories', 'footwear'];
+    
+    // An array to hold our category sections
+    const categorySections = [];
+
+    // Loop through each defined category and fetch its top 4 products
+    for (const categoryName of featuredCategories) {
+      const products = await Product.find({ category: categoryName })
+        .sort({ rating: -1 }) // Sort by highest rating
+        .limit(4);
+      
+      // If we found products, add this section to our array
+      if (products.length > 0) {
+        categorySections.push({
+          name: categoryName,
+          products: products
+        });
+      }
+    }
 
     res.render('home', {
       title: 'Home',
-      featuredProducts: featuredProducts // Pass products to the page
+      categorySections: categorySections // Pass this new array to the page
     });
   } catch (error) {
-    console.error("Error fetching featured products:", error);
-    // Still render the page, just with no products
-    res.render('home', { title: 'Home', featuredProducts: [] });
+    console.error("Error fetching featured categories:", error);
+    // Fallback: render the page with no sections
+    res.render('home', { title: 'Home', categorySections: [] });
   }
 });
 
@@ -39,10 +55,9 @@ router.get('/contact', (req, res) => {
 
 // --- Protected Routes ---
 
-// Products Page (NOW WITH FILTERS)
+// Products Page
 router.get('/products', isAuthenticated, async (req, res) => {
   try {
-    // --- Filter & Sort Logic ---
     const { category, sort } = req.query;
     
     let filterQuery = {};
@@ -60,36 +75,31 @@ router.get('/products', isAuthenticated, async (req, res) => {
     } else {
       sortQuery = { createdAt: -1 }; // Default: newest
     }
-    // --- End Logic ---
 
-    // Fetch all products matching the filter
     const products = await Product.find(filterQuery).sort(sortQuery);
-    
-    // Fetch all unique categories to populate the filter dropdown
     const categories = await Product.distinct('category');
     
     res.render('products', {
       title: 'Products',
       products: products,
       categories: categories,
-      currentCategory: category, // Pass current filter
-      currentSort: sort // Pass current sort
+      currentCategory: category, 
+      currentSort: sort 
     });
   } catch (error) {
     console.error(error);
-    res.redirect('/'); // Redirect home on error
+    res.redirect('/'); 
   }
 });
 
 // Wishlist Page
 router.get('/wishlist', isAuthenticated, async (req, res) => {
   try {
-    // Find the user and populate their wishlist with product details
     const user = await User.findById(req.session.userId).populate('wishlist');
     
     res.render('wishlist', {
       title: 'Your Wishlist',
-      wishlistItems: user.wishlist // Pass the populated items
+      wishlistItems: user.wishlist 
     });
   } catch (error) {
     console.error(error);
@@ -99,7 +109,7 @@ router.get('/wishlist', isAuthenticated, async (req, res) => {
 
 // --- API Route for Wishlist ---
 
-// POST /wishlist/toggle/:id - Add or remove from wishlist
+// POST /wishlist/toggle/:id 
 router.post('/wishlist/toggle/:productId', isAuthenticated, async (req, res) => {
   try {
     const { productId } = req.params;
