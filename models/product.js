@@ -6,6 +6,18 @@ const productSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
+  description: {
+    type: String,
+    required: true,
+    trim: true,
+    default: 'No description available.'
+  },
+  brand: {
+    type: String,
+    required: true,
+    trim: true,
+    default: 'Unbranded'
+  },
   image: {
     type: String, // URL to the product image
     required: true
@@ -13,6 +25,10 @@ const productSchema = new mongoose.Schema({
   price: {
     type: Number,
     required: true,
+    min: 0
+  },
+  originalPrice: {
+    type: Number,
     min: 0
   },
   category: {
@@ -26,6 +42,10 @@ const productSchema = new mongoose.Schema({
     default: 4.5,
     min: 0,
     max: 5
+  },
+  numRatings: {
+    type: Number,
+    default: 0
   }
 }, { timestamps: true });
 
