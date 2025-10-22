@@ -1,17 +1,53 @@
 <%- include('partials/header', { title: 'Wishlist' }) %>
 <%- include('partials/navbar') %>
+
 <main class="container">
   <h1 class="page-title">Your Wishlist</h1>
-  
+
   <% if (locals.wishlistItems && wishlistItems.length > 0) { %>
-    <p>Your saved items:</p>
-    <ul>
+    
+    <div class="product-grid">
       <% wishlistItems.forEach(item => { %>
-        <li><%= item.name %> - $<%= item.price %></li>
+        <div class="product-card" id="card-<%= item._id %>">
+          <div class="product-image">
+            <img src="<%= item.image %>" alt="<%= item.name %>">
+          </div>
+          <div class="product-info">
+            <span class="product-category"><%= item.category %></span>
+            <h3 class="product-name"><%= item.name %></h3>
+            <div class="product-rating">Rating: <%= item.rating %> ★</div>
+            <div class="product-price">$<%= item.price.toFixed(2) %></div>
+          </div>
+          <div class="product-actions">
+            <button 
+              class="btn-wishlist active" 
+              data-id="<%= item._id %>"
+            >
+              ♥
+            </button>
+            
+            <a 
+              href="https://instagram.com/YourBrandInstagram" 
+              target="_blank" 
+              class="btn-buy"
+            >
+              Buy Now
+            </a>
+          </div>
+        </div>
       <% }) %>
-    </ul>
+    </div>
+
   <% } else { %>
-    <p style="text-align: center;">You haven't added any items to your wishlist yet.</p>
+    
+    <p style="text-align: center; font-size: 1.1rem; margin-bottom: 1.5rem;">
+      You haven't added any items to your wishlist yet.
+    </p>
+    <a href="/products" class="btn-submit" style="display: block; width: 200px; margin: auto; text-align: center;">
+      Shop Products
+    </a>
+
   <% } %>
 </main>
+
 <%- include('partials/footer') %>
