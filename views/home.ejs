@@ -3,11 +3,11 @@
 
 <main class="pt-20">
   <!-- Hero Section -->
-  <section class="relative h-96 bg-cover bg-center flex flex-col justify-center items-center text-white text-center" style="background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');">
+  <section class="relative h-96 bg-cover bg-center flex flex-col justify-center items-center text-white text-center" style="background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=2070&q=80');">
     <div class="max-w-4xl mx-auto px-4">
       <h1 class="text-5xl md:text-6xl font-bold mb-4">Discover Your Style.</h1>
       <p class="text-xl md:text-2xl mb-8">Curated Fashion for the Modern Individual.</p>
-      <a href="/products" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-6 rounded-full transition-colors duration-300 inline-block">
+      <a href="/products" class="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-full transition-colors duration-300 inline-block">
         Shop Now
       </a>
     </div>
@@ -22,7 +22,7 @@
             <h2 class="text-3xl font-bold text-gray-800">
               <%= section.name.charAt(0).toUpperCase() + section.name.slice(1) %> Picks
             </h2>
-            <a href="/products?category=<%= section.name %>" class="text-emerald-500 hover:text-emerald-600 font-semibold transition-colors duration-200">
+            <a href="/products?category=<%= section.name %>" class="text-blue-500 hover:text-blue-600 font-semibold transition-colors duration-200">
               View all <%= section.name %> →
             </a>
           </div>

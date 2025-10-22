@@ -5,6 +5,7 @@
   <h1 class="page-title">All Products</h1>
 
   <form action="/products" method="GET" class="filter-bar" id="filter-form">
+    <input type="hidden" name="q" value="<%= (locals.currentQuery && currentQuery.q) ? currentQuery.q : '' %>" />
     <div class="filter-group">
       <label for="category">Filter by Category:</label>
       <select name="category" id="category" class="filter-select">

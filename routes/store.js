@@ -58,11 +58,20 @@ router.get('/contact', (req, res) => {
 // Products Page
 router.get('/products', isAuthenticated, async (req, res) => {
   try {
-    const { category, sort } = req.query;
+    const { category, sort, q } = req.query;
     
     let filterQuery = {};
     if (category) {
       filterQuery.category = category;
+    }
+    if (q) {
+      const regex = new RegExp(q, 'i');
+      filterQuery.$or = [
+        { name: regex },
+        { brand: regex },
+        { description: regex },
+        { category: regex }
+      ];
     }
 
     let sortQuery = {};
@@ -84,7 +93,8 @@ router.get('/products', isAuthenticated, async (req, res) => {
       products: products,
       categories: categories,
       currentCategory: category, 
-      currentSort: sort 
+      currentSort: sort,
+      q: q
     });
   } catch (error) {
     console.error(error);

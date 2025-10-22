@@ -1,74 +1,27 @@
-<nav class="bg-white shadow-md p-4 flex justify-between items-center fixed w-full z-10">
-  <div class="flex items-center">
-    <a href="/" class="text-2xl font-bold text-gray-800 flex items-center">
-      <i class="fas fa-shopping-bag text-emerald-500 mr-2"></i>
-      Pixelcart
-    </a>
+<nav class="bg-white p-3 shadow-sm sticky top-0 z-10">
+  <!-- Search bar -->
+  <div class="relative">
+    <form action="/products" method="GET" class="relative">
+      <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+      <input 
+        type="text" 
+        name="q" 
+        value="<%= (locals.currentQuery && currentQuery.q) ? currentQuery.q : '' %>"
+        placeholder="creatine monohydrate" 
+        class="w-full p-2.5 pl-10 rounded-lg bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-red-500"
+        aria-label="Search products"
+      />
+      <i class="fas fa-camera absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+    </form>
   </div>
 
-  <div class="hidden md:flex items-center space-x-8">
-    <a href="/" class="text-gray-700 hover:text-emerald-500 transition-colors duration-200">Home</a>
-    <a href="/products" class="text-gray-700 hover:text-emerald-500 transition-colors duration-200">Shop</a>
-    
-    <% if (locals.user) { %>
-      <a href="/wishlist" class="text-gray-600 hover:text-emerald-500 ml-4 relative">
-        <i class="fas fa-heart"></i>
-        <span class="absolute -top-2 -right-2 bg-emerald-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center" id="wishlist-count"><%= user.wishlist?.length || 0 %></span>
-      </a>
-      <a href="/cart" class="text-gray-600 hover:text-emerald-500 ml-4 relative">
-        <i class="fas fa-shopping-cart"></i>
-        <span class="absolute -top-2 -right-2 bg-emerald-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center" id="cart-count"><%= user.cart?.length || 0 %></span>
-      </a>
-      <a href="/profile" class="text-gray-700 hover:text-emerald-500 transition-colors duration-200">Account</a>
-      <a href="/contact" class="text-gray-700 hover:text-emerald-500 transition-colors duration-200">Contact</a>
-      
-      <% if (user.email === process.env.ADMIN_EMAIL) { %>
-        <a href="/admin" class="text-gray-700 hover:text-emerald-500 transition-colors duration-200">Admin</a>
-      <% } %>
-      
-      <a href="/logout" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300">
-        <i class="fas fa-sign-out-alt mr-1"></i>Logout
-      </a>
-    
-    <% } else { %>
-      <a href="/contact" class="text-gray-700 hover:text-emerald-500 transition-colors duration-200">Contact</a>
-      <a href="/login" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300">
-        <i class="fas fa-sign-in-alt mr-1"></i>Login
-      </a>
-    <% } %>
-  </div>
-
-  <div class="flex items-center space-x-4">
-    <button class="theme-toggle text-gray-600 hover:text-emerald-500 transition-colors duration-200" id="theme-toggle" title="Toggle theme">
-      <i class="fas fa-moon" id="theme-icon"></i>
-    </button>
-    <button class="md:hidden text-gray-600 hover:text-emerald-500" id="mobile-menu-toggle">
-      <i class="fas fa-bars"></i>
-    </button>
-  </div>
-
-  <!-- Mobile Menu -->
-  <div class="md:hidden absolute top-full left-0 w-full bg-white shadow-lg hidden" id="mobile-menu">
-    <div class="px-4 py-2 space-y-2">
-      <a href="/" class="block py-2 text-gray-700 hover:text-emerald-500 transition-colors duration-200">Home</a>
-      <a href="/products" class="block py-2 text-gray-700 hover:text-emerald-500 transition-colors duration-200">Shop</a>
-      
-      <% if (locals.user) { %>
-        <a href="/wishlist" class="block py-2 text-gray-700 hover:text-emerald-500 transition-colors duration-200">Wishlist</a>
-        <a href="/cart" class="block py-2 text-gray-700 hover:text-emerald-500 transition-colors duration-200">Cart</a>
-        <a href="/profile" class="block py-2 text-gray-700 hover:text-emerald-500 transition-colors duration-200">Account</a>
-        <a href="/contact" class="block py-2 text-gray-700 hover:text-emerald-500 transition-colors duration-200">Contact</a>
-        
-        <% if (user.email === process.env.ADMIN_EMAIL) { %>
-          <a href="/admin" class="block py-2 text-gray-700 hover:text-emerald-500 transition-colors duration-200">Admin</a>
-        <% } %>
-        
-        <a href="/logout" class="block py-2 text-gray-700 hover:text-emerald-500 transition-colors duration-200">Logout</a>
-      
-      <% } else { %>
-        <a href="/contact" class="block py-2 text-gray-700 hover:text-emerald-500 transition-colors duration-200">Contact</a>
-        <a href="/login" class="block py-2 text-gray-700 hover:text-emerald-500 transition-colors duration-200">Login</a>
-      <% } %>
-    </div>
+  <!-- Top nav categories -->
+  <div class="flex overflow-x-auto p-2 space-x-2 bg-white border-b border-gray-200 scrollbar-hide">
+    <% const _activeCat = (typeof currentCategory !== 'undefined' && currentCategory) ? currentCategory.toLowerCase() : null; %>
+    <a href="/" class="px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap <%= !_activeCat ? 'bg-red-500 text-white shadow-md' : 'bg-white text-gray-700 hover:bg-gray-50' %>">For You</a>
+    <a href="/products?category=fashion" class="px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap <%= _activeCat === 'fashion' ? 'bg-red-500 text-white shadow-md' : 'bg-white text-gray-700 hover:bg-gray-50' %>">Fashion</a>
+    <a href="/products?category=mobile" class="px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap <%= _activeCat === 'mobile' ? 'bg-red-500 text-white shadow-md' : 'bg-white text-gray-700 hover:bg-gray-50' %>">Mobile</a>
+    <a href="/products?category=electronics" class="px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap <%= _activeCat === 'electronics' ? 'bg-red-500 text-white shadow-md' : 'bg-white text-gray-700 hover:bg-gray-50' %>">Electronics</a>
+    <a href="/products?category=appliances" class="px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap <%= _activeCat === 'appliances' ? 'bg-red-500 text-white shadow-md' : 'bg-white text-gray-700 hover:bg-gray-50' %>">Appliances</a>
   </div>
 </nav>

@@ -1,20 +1,20 @@
-<footer class="bg-gray-800 text-gray-200 p-8 mt-12">
+<footer class="bg-white border-t border-gray-200 p-6 mt-12">
   <div class="container mx-auto px-4">
     <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
       <!-- About Us -->
       <div>
-        <h3 class="text-xl font-bold text-white mb-4">About Us</h3>
-        <p class="text-gray-300 mb-4">
+        <h3 class="text-xl font-bold text-gray-900 mb-4">About Us</h3>
+        <p class="text-gray-600 mb-4">
           Pixelcart offers the latest trends in modern apparel and accessories. Find your perfect style with us.
         </p>
         <div class="flex space-x-4">
-          <a href="#" class="text-gray-400 hover:text-emerald-500 transition-colors duration-200">
+          <a href="#" class="text-gray-500 hover:text-blue-500 transition-colors duration-200">
             <i class="fab fa-instagram text-xl"></i>
           </a>
-          <a href="#" class="text-gray-400 hover:text-emerald-500 transition-colors duration-200">
+          <a href="#" class="text-gray-500 hover:text-blue-500 transition-colors duration-200">
             <i class="fab fa-facebook-f text-xl"></i>
           </a>
-          <a href="#" class="text-gray-400 hover:text-emerald-500 transition-colors duration-200">
+          <a href="#" class="text-gray-500 hover:text-blue-500 transition-colors duration-200">
             <i class="fab fa-twitter text-xl"></i>
           </a>
         </div>
@@ -22,41 +22,41 @@
 
       <!-- Customer Service -->
       <div>
-        <h3 class="text-xl font-bold text-white mb-4">Customer Service</h3>
+        <h3 class="text-xl font-bold text-gray-900 mb-4">Customer Service</h3>
         <ul class="space-y-2">
-          <li><a href="/faq" class="text-gray-300 hover:text-emerald-500 transition-colors duration-200">FAQ</a></li>
-          <li><a href="/shipping" class="text-gray-300 hover:text-emerald-500 transition-colors duration-200">Shipping</a></li>
-          <li><a href="/returns" class="text-gray-300 hover:text-emerald-500 transition-colors duration-200">Returns</a></li>
-          <li><a href="/contact" class="text-gray-300 hover:text-emerald-500 transition-colors duration-200">Contact Us</a></li>
+          <li><a href="/faq" class="text-gray-600 hover:text-blue-500 transition-colors duration-200">FAQ</a></li>
+          <li><a href="/shipping" class="text-gray-600 hover:text-blue-500 transition-colors duration-200">Shipping</a></li>
+          <li><a href="/returns" class="text-gray-600 hover:text-blue-500 transition-colors duration-200">Returns</a></li>
+          <li><a href="/contact" class="text-gray-600 hover:text-blue-500 transition-colors duration-200">Contact Us</a></li>
         </ul>
       </div>
 
       <!-- Quick Links -->
       <div>
-        <h3 class="text-xl font-bold text-white mb-4">Quick Links</h3>
+        <h3 class="text-xl font-bold text-gray-900 mb-4">Quick Links</h3>
         <ul class="space-y-2">
-          <li><a href="/" class="text-gray-300 hover:text-emerald-500 transition-colors duration-200">Home</a></li>
-          <li><a href="/products" class="text-gray-300 hover:text-emerald-500 transition-colors duration-200">Shop</a></li>
-          <li><a href="/wishlist" class="text-gray-300 hover:text-emerald-500 transition-colors duration-200">Wishlist</a></li>
+          <li><a href="/" class="text-gray-600 hover:text-blue-500 transition-colors duration-200">Home</a></li>
+          <li><a href="/products" class="text-gray-600 hover:text-blue-500 transition-colors duration-200">Shop</a></li>
+          <li><a href="/wishlist" class="text-gray-600 hover:text-blue-500 transition-colors duration-200">Wishlist</a></li>
           <% if (locals.user) { %>
-            <li><a href="/profile" class="text-gray-300 hover:text-emerald-500 transition-colors duration-200">Account</a></li>
+            <li><a href="/profile" class="text-gray-600 hover:text-blue-500 transition-colors duration-200">Account</a></li>
           <% } %>
         </ul>
       </div>
 
       <!-- Newsletter -->
       <div>
-        <h3 class="text-xl font-bold text-white mb-4">Newsletter</h3>
-        <p class="text-gray-300 mb-4">Subscribe to get updates on new products and exclusive offers.</p>
+        <h3 class="text-xl font-bold text-gray-900 mb-4">Newsletter</h3>
+        <p class="text-gray-600 mb-4">Subscribe to get updates on new products and exclusive offers.</p>
         <form class="flex flex-col space-y-2">
           <input 
             type="email" 
             placeholder="Enter your email" 
-            class="px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+            class="px-3 py-2 bg-white border border-gray-300 rounded-md text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
           >
           <button 
             type="submit" 
-            class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300"
+            class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300"
           >
             Subscribe
           </button>
@@ -65,13 +65,43 @@
     </div>
 
     <!-- Bottom Bar -->
-    <div class="border-t border-gray-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
-      <p class="text-gray-400 text-sm">© 2024 Pixelcart. All rights reserved.</p>
+    <div class="border-t border-gray-200 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+      <p class="text-gray-500 text-sm">© 2024 Pixelcart. All rights reserved.</p>
       <div class="flex space-x-6 mt-4 md:mt-0">
-        <a href="/privacy" class="text-gray-400 hover:text-emerald-500 transition-colors duration-200 text-sm">Privacy Policy</a>
-        <a href="/terms" class="text-gray-400 hover:text-emerald-500 transition-colors duration-200 text-sm">Terms of Service</a>
-        <a href="/cookies" class="text-gray-400 hover:text-emerald-500 transition-colors duration-200 text-sm">Cookie Policy</a>
+        <a href="/privacy" class="text-gray-500 hover:text-blue-500 transition-colors duration-200 text-sm">Privacy Policy</a>
+        <a href="/terms" class="text-gray-500 hover:text-blue-500 transition-colors duration-200 text-sm">Terms of Service</a>
+        <a href="/cookies" class="text-gray-500 hover:text-blue-500 transition-colors duration-200 text-sm">Cookie Policy</a>
       </div>
     </div>
   </div>
 </footer>
+
+<!-- Bottom navigation bar (mobile) -->
+<nav class="fixed bottom-0 left-0 w-full bg-white shadow-lg border-t border-gray-200 flex justify-around items-center h-16 z-20 md:hidden">
+  <a href="/" class="flex flex-col items-center text-xs <%= currentPath === '/' ? 'text-red-500' : 'text-gray-500 hover:text-red-500' %>">
+    <i class="fas fa-home text-lg"></i>
+    <span>Home</span>
+  </a>
+  <a href="#" class="flex flex-col items-center text-xs text-gray-500 hover:text-red-500">
+    <i class="fas fa-play-circle text-lg"></i>
+    <span>Play</span>
+  </a>
+  <a href="/products" class="flex flex-col items-center text-xs <%= currentPath.startsWith('/products') ? 'text-red-500' : 'text-gray-500 hover:text-red-500' %>">
+    <i class="fas fa-th-large text-lg"></i>
+    <span>Categories</span>
+  </a>
+  <a href="<%= locals.user ? '/profile' : '/login' %>" class="flex flex-col items-center text-xs <%= currentPath.startsWith('/profile') ? 'text-red-500' : 'text-gray-500 hover:text-red-500' %>">
+    <i class="fas fa-user text-lg"></i>
+    <span>Account</span>
+  </a>
+  <a href="/cart" class="flex flex-col items-center text-xs <%= currentPath.startsWith('/cart') ? 'text-red-500' : 'text-gray-500 hover:text-red-500' %> relative">
+    <i class="fas fa-shopping-cart text-lg"></i>
+    <span>Cart</span>
+    <% if (locals.user) { %>
+      <span class="absolute -top-1 -right-2 bg-red-500 text-white text-[10px] rounded-full h-4 w-4 flex items-center justify-center" id="cart-count"><%= user.cart?.length || 0 %></span>
+    <% } %>
+  </a>
+</nav>
+
+<!-- Site JS -->
+<script src="/js/main.js"></script>
