@@ -20,14 +20,19 @@ router.post('/admin/add-product', async (req, res) => {
     // This is the line to update
 const { name, description, brand, image, price, originalPrice, category, rating, numRatings } = req.body;
 
-    // Create a new product object
-    const newProduct = new Product({
-      name,
-      image,
-      price: parseFloat(price),
-      category: category.toLowerCase(),
-      rating: rating ? parseFloat(rating) : 4.5 // Default rating if empty
-    });
+// This is the object to update
+const newProduct = new Product({
+  name,
+  description,
+  brand,
+  image,
+  price: parseFloat(price),
+  originalPrice: originalPrice ? parseFloat(originalPrice) : null,
+  category: category.toLowerCase(),
+  rating: rating ? parseFloat(rating) : 4.5,
+  numRatings: numRatings ? parseInt(numRatings) : 0
+});
+
 
     // Save it to the database
     await newProduct.save();
