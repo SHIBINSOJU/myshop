@@ -1,5 +1,48 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+  // --- Theme Toggle Functionality ---
+  const themeToggle = document.getElementById('theme-toggle');
+  const themeIcon = document.getElementById('theme-icon');
+  const body = document.body;
+  const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  // Check for saved theme preference or default to 'light'
+  const currentTheme = localStorage.getItem('theme') || 'light';
+  body.setAttribute('data-theme', currentTheme);
+  
+  // Update icon based on current theme
+  if (currentTheme === 'dark') {
+    themeIcon.className = 'fas fa-sun';
+  } else {
+    themeIcon.className = 'fas fa-moon';
+  }
+
+  // Theme toggle event listener
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = body.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      
+      body.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      
+      // Update icon
+      if (newTheme === 'dark') {
+        themeIcon.className = 'fas fa-sun';
+      } else {
+        themeIcon.className = 'fas fa-moon';
+      }
+    });
+  }
+
+  // Mobile menu toggle
+  if (mobileMenuToggle && mobileMenu) {
+    mobileMenuToggle.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+  }
+
   // --- Form Loading State ---
   const allForms = document.querySelectorAll('form');
   allForms.forEach(form => {
@@ -36,6 +79,68 @@ document.addEventListener('DOMContentLoaded', () => {
       navbarMenu.classList.toggle('active');
     });
   }
+
+  // --- Add to Cart ---
+  const addToCartButtons = document.querySelectorAll('.btn-add-cart');
+
+  addToCartButtons.forEach(button => {
+    button.addEventListener('click', async () => {
+      const productId = button.dataset.productId;
+      
+      try {
+        // Disable button to prevent double-click
+        button.disabled = true;
+        const originalText = button.innerHTML;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+
+        const response = await fetch('/cart/add', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ productId: productId, quantity: 1 })
+        });
+
+        if (!response.ok) {
+          if (response.status === 401 || response.status === 403) {
+             window.location.href = '/login';
+             return;
+          }
+          throw new Error('Network response was not ok');
+        }
+
+        const result = await response.json();
+
+        if (result.success) {
+          // Update cart count in navbar
+          const cartCount = document.getElementById('cart-count');
+          if (cartCount) {
+            cartCount.textContent = result.cartCount;
+          }
+
+          // Show success feedback
+          button.innerHTML = '<i class="fas fa-check"></i> Added!';
+          button.style.background = 'var(--accent-color)';
+          button.style.color = 'white';
+          
+          setTimeout(() => {
+            button.innerHTML = originalText;
+            button.style.background = '';
+            button.style.color = '';
+          }, 2000);
+        }
+      } catch (error) {
+        console.error('Error adding to cart:', error);
+        button.innerHTML = '<i class="fas fa-exclamation"></i> Error';
+        setTimeout(() => {
+          button.innerHTML = originalText;
+        }, 2000);
+      } finally {
+        // Re-enable button after action is complete
+        button.disabled = false;
+      }
+    });
+  });
 
   // --- Wishlist Toggle ---
   const wishlistButtons = document.querySelectorAll('.btn-wishlist');

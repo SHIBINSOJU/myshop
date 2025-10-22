@@ -1,0 +1,199 @@
+<%- include('partials/header', { title: product.name }) %>
+<%- include('partials/navbar') %>
+
+<main class="container">
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb">
+    <a href="/">Home</a>
+    <span class="breadcrumb-separator">›</span>
+    <a href="/products">Products</a>
+    <span class="breadcrumb-separator">›</span>
+    <a href="/products?category=<%= product.category %>"><%= product.category.charAt(0).toUpperCase() + product.category.slice(1) %></a>
+    <span class="breadcrumb-separator">›</span>
+    <span class="breadcrumb-current"><%= product.name %></span>
+  </nav>
+
+  <div class="product-details-container">
+    <!-- Product Images -->
+    <div class="product-images">
+      <div class="main-image">
+        <img src="<%= product.image %>" alt="<%= product.name %>" id="main-product-image">
+        <div class="image-zoom-overlay" id="zoom-overlay">
+          <img src="<%= product.image %>" alt="<%= product.name %>" class="zoomed-image">
+        </div>
+      </div>
+      
+      <!-- Image thumbnails (if you have multiple images) -->
+      <div class="image-thumbnails">
+        <div class="thumbnail active" data-image="<%= product.image %>">
+          <img src="<%= product.image %>" alt="<%= product.name %>">
+        </div>
+        <!-- Add more thumbnails here if you have multiple product images -->
+      </div>
+    </div>
+
+    <!-- Product Information -->
+    <div class="product-info">
+      <div class="product-header">
+        <span class="product-brand"><%= product.brand %></span>
+        <h1 class="product-title"><%= product.name %></h1>
+        
+        <div class="product-rating-section">
+          <div class="rating-stars">
+            <% for (let i = 1; i <= 5; i++) { %>
+              <span class="star <%= i <= Math.floor(product.rating) ? 'filled' : '' %>">★</span>
+            <% } %>
+          </div>
+          <span class="rating-value"><%= product.rating.toFixed(1) %></span>
+          <span class="rating-count">(<%= product.numRatings %> reviews)</span>
+        </div>
+      </div>
+
+      <div class="product-description">
+        <h3>Description</h3>
+        <p><%= product.description %></p>
+      </div>
+
+      <div class="product-specifications">
+        <h3>Product Details</h3>
+        <div class="spec-grid">
+          <div class="spec-item">
+            <span class="spec-label">Brand:</span>
+            <span class="spec-value"><%= product.brand %></span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Category:</span>
+            <span class="spec-value"><%= product.category.charAt(0).toUpperCase() + product.category.slice(1) %></span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">SKU:</span>
+            <span class="spec-value">#<%= product._id.toString().slice(-8).toUpperCase() %></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-pricing">
+        <div class="price-container">
+          <span class="current-price">$<%= product.price.toFixed(2) %></span>
+          <% if (product.originalPrice && product.originalPrice > product.price) { %>
+            <span class="original-price">$<%= product.originalPrice.toFixed(2) %></span>
+            <span class="discount-badge">
+              Save <%= Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) %>%
+            </span>
+          <% } %>
+        </div>
+      </div>
+
+      <div class="product-actions">
+        <button class="btn-wishlist-detail <%= (locals.user && user.wishlist.includes(product._id)) ? 'active' : '' %>" 
+                data-id="<%= product._id %>"
+                title="Add to Wishlist">
+          <i class="fas fa-heart"></i>
+          <span><%= (locals.user && user.wishlist.includes(product._id)) ? 'Remove from Wishlist' : 'Add to Wishlist' %></span>
+        </button>
+        
+        <a href="https://instagram.com/YourBrandInstagram" 
+           target="_blank" 
+           class="btn-buy-detail">
+          <i class="fas fa-shopping-cart"></i>
+          <span>Buy Now</span>
+        </a>
+      </div>
+
+      <div class="product-features">
+        <div class="feature-item">
+          <i class="fas fa-shipping-fast"></i>
+          <div>
+            <h4>Free Shipping</h4>
+            <p>On orders over $50</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <i class="fas fa-undo"></i>
+          <div>
+            <h4>Easy Returns</h4>
+            <p>30-day return policy</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <i class="fas fa-shield-alt"></i>
+          <div>
+            <h4>Secure Payment</h4>
+            <p>100% secure checkout</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Related Products -->
+  <section class="related-products">
+    <h2>You might also like</h2>
+    <div class="product-grid">
+      <% if (relatedProducts && relatedProducts.length > 0) { %>
+        <% relatedProducts.forEach(relatedProduct => { %>
+          <%- include('partials/product-card', { product: relatedProduct }) %>
+        <% }) %>
+      <% } else { %>
+        <p class="no-related">No related products found.</p>
+      <% } %>
+    </div>
+  </section>
+</main>
+
+<%- include('partials/footer') %>
+
+<script>
+// Image zoom functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const mainImage = document.getElementById('main-product-image');
+  const zoomOverlay = document.getElementById('zoom-overlay');
+  
+  if (mainImage && zoomOverlay) {
+    mainImage.addEventListener('mouseenter', function() {
+      zoomOverlay.style.display = 'block';
+    });
+    
+    mainImage.addEventListener('mouseleave', function() {
+      zoomOverlay.style.display = 'none';
+    });
+    
+    mainImage.addEventListener('mousemove', function(e) {
+      const rect = mainImage.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      
+      const zoomedImage = zoomOverlay.querySelector('.zoomed-image');
+      zoomedImage.style.transform = `scale(2) translate(-${x}%, -${y}%)`;
+      zoomedImage.style.transformOrigin = `${x}% ${y}%`;
+    });
+  }
+
+  // Wishlist toggle functionality
+  const wishlistBtn = document.querySelector('.btn-wishlist-detail');
+  if (wishlistBtn) {
+    wishlistBtn.addEventListener('click', async function() {
+      const productId = this.dataset.id;
+      
+      try {
+        const response = await fetch(`/wishlist/toggle/${productId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          this.classList.toggle('active');
+          const span = this.querySelector('span');
+          span.textContent = data.action === 'added' ? 'Remove from Wishlist' : 'Add to Wishlist';
+        }
+      } catch (error) {
+        console.error('Error toggling wishlist:', error);
+      }
+    });
+  }
+});
+</script>

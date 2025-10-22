@@ -1,28 +1,74 @@
-<nav class="navbar">
-  <div class="navbar-container">
-    <a href="/" class="navbar-logo-link">
-      <img src="/images/logo.png" alt="Logo" class="navbar-logo">
-      <span class="navbar-brand-name"><%= brandName %></span>
+<nav class="bg-white shadow-md p-4 flex justify-between items-center fixed w-full z-10">
+  <div class="flex items-center">
+    <a href="/" class="text-2xl font-bold text-gray-800 flex items-center">
+      <i class="fas fa-shopping-bag text-emerald-500 mr-2"></i>
+      Pixelcart
     </a>
+  </div>
+
+  <div class="hidden md:flex items-center space-x-8">
+    <a href="/" class="text-gray-700 hover:text-emerald-500 transition-colors duration-200">Home</a>
+    <a href="/products" class="text-gray-700 hover:text-emerald-500 transition-colors duration-200">Shop</a>
     
-    <ul class="navbar-menu">
-      <li><a href="/" class="navbar-link">Home</a></li>
-      <li><a href="/products" class="navbar-link">Products</a></li>
-      <li><a href="/wishlist" class="navbar-link">Wishlist</a></li>
-      <li><a href="/contact" class="navbar-link">Contact</a></li>
+    <% if (locals.user) { %>
+      <a href="/wishlist" class="text-gray-600 hover:text-emerald-500 ml-4 relative">
+        <i class="fas fa-heart"></i>
+        <span class="absolute -top-2 -right-2 bg-emerald-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center" id="wishlist-count"><%= user.wishlist?.length || 0 %></span>
+      </a>
+      <a href="/cart" class="text-gray-600 hover:text-emerald-500 ml-4 relative">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="absolute -top-2 -right-2 bg-emerald-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center" id="cart-count"><%= user.cart?.length || 0 %></span>
+      </a>
+      <a href="/profile" class="text-gray-700 hover:text-emerald-500 transition-colors duration-200">Account</a>
+      <a href="/contact" class="text-gray-700 hover:text-emerald-500 transition-colors duration-200">Contact</a>
+      
+      <% if (user.email === process.env.ADMIN_EMAIL) { %>
+        <a href="/admin" class="text-gray-700 hover:text-emerald-500 transition-colors duration-200">Admin</a>
+      <% } %>
+      
+      <a href="/logout" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300">
+        <i class="fas fa-sign-out-alt mr-1"></i>Logout
+      </a>
+    
+    <% } else { %>
+      <a href="/contact" class="text-gray-700 hover:text-emerald-500 transition-colors duration-200">Contact</a>
+      <a href="/login" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300">
+        <i class="fas fa-sign-in-alt mr-1"></i>Login
+      </a>
+    <% } %>
+  </div>
+
+  <div class="flex items-center space-x-4">
+    <button class="theme-toggle text-gray-600 hover:text-emerald-500 transition-colors duration-200" id="theme-toggle" title="Toggle theme">
+      <i class="fas fa-moon" id="theme-icon"></i>
+    </button>
+    <button class="md:hidden text-gray-600 hover:text-emerald-500" id="mobile-menu-toggle">
+      <i class="fas fa-bars"></i>
+    </button>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div class="md:hidden absolute top-full left-0 w-full bg-white shadow-lg hidden" id="mobile-menu">
+    <div class="px-4 py-2 space-y-2">
+      <a href="/" class="block py-2 text-gray-700 hover:text-emerald-500 transition-colors duration-200">Home</a>
+      <a href="/products" class="block py-2 text-gray-700 hover:text-emerald-500 transition-colors duration-200">Shop</a>
       
       <% if (locals.user) { %>
+        <a href="/wishlist" class="block py-2 text-gray-700 hover:text-emerald-500 transition-colors duration-200">Wishlist</a>
+        <a href="/cart" class="block py-2 text-gray-700 hover:text-emerald-500 transition-colors duration-200">Cart</a>
+        <a href="/profile" class="block py-2 text-gray-700 hover:text-emerald-500 transition-colors duration-200">Account</a>
+        <a href="/contact" class="block py-2 text-gray-700 hover:text-emerald-500 transition-colors duration-200">Contact</a>
+        
         <% if (user.email === process.env.ADMIN_EMAIL) { %>
-          <li><a href="/admin" class="navbar-link" style="color: var(--accent-color);">Admin</a></li>
+          <a href="/admin" class="block py-2 text-gray-700 hover:text-emerald-500 transition-colors duration-200">Admin</a>
         <% } %>
         
-        <li><a href="/logout" class="navbar-button">Logout</a></li>
+        <a href="/logout" class="block py-2 text-gray-700 hover:text-emerald-500 transition-colors duration-200">Logout</a>
       
       <% } else { %>
-        <li><a href="/login" class="navbar-button">Login</a></li>
+        <a href="/contact" class="block py-2 text-gray-700 hover:text-emerald-500 transition-colors duration-200">Contact</a>
+        <a href="/login" class="block py-2 text-gray-700 hover:text-emerald-500 transition-colors duration-200">Login</a>
       <% } %>
-    </ul>
-    
-    <div class="navbar-toggle">☰</div>
+    </div>
   </div>
 </nav>

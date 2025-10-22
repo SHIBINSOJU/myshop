@@ -1,0 +1,258 @@
+<%- include('partials/header', { title: 'Checkout' }) %>
+<%- include('partials/navbar') %>
+
+<main class="container">
+  <div class="checkout-header">
+    <h1 class="page-title">Checkout</h1>
+    <div class="checkout-steps">
+      <div class="step active">
+        <span class="step-number">1</span>
+        <span class="step-label">Shipping</span>
+      </div>
+      <div class="step">
+        <span class="step-number">2</span>
+        <span class="step-label">Payment</span>
+      </div>
+      <div class="step">
+        <span class="step-number">3</span>
+        <span class="step-label">Review</span>
+      </div>
+    </div>
+  </div>
+
+  <form class="checkout-form" action="/checkout/process" method="POST">
+    <div class="checkout-container">
+      <div class="checkout-main">
+        <!-- Shipping Information -->
+        <section class="checkout-section">
+          <h2><i class="fas fa-shipping-fast"></i> Shipping Information</h2>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="firstName">First Name *</label>
+              <input type="text" id="firstName" name="firstName" required 
+                     value="<%= user.firstName || '' %>">
+            </div>
+            <div class="form-group">
+              <label for="lastName">Last Name *</label>
+              <input type="text" id="lastName" name="lastName" required 
+                     value="<%= user.lastName || '' %>">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address *</label>
+            <input type="email" id="email" name="email" required 
+                   value="<%= user.email || '' %>" readonly>
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Phone Number *</label>
+            <input type="tel" id="phone" name="phone" required 
+                   value="<%= user.phone || '' %>">
+          </div>
+
+          <div class="form-group">
+            <label for="street">Street Address *</label>
+            <input type="text" id="street" name="street" required 
+                   value="<%= user.address?.street || '' %>">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="city">City *</label>
+              <input type="text" id="city" name="city" required 
+                     value="<%= user.address?.city || '' %>">
+            </div>
+            <div class="form-group">
+              <label for="state">State *</label>
+              <select id="state" name="state" required>
+                <option value="">Select State</option>
+                <option value="AL" <%= user.address?.state === 'AL' ? 'selected' : '' %>>Alabama</option>
+                <option value="CA" <%= user.address?.state === 'CA' ? 'selected' : '' %>>California</option>
+                <option value="NY" <%= user.address?.state === 'NY' ? 'selected' : '' %>>New York</option>
+                <option value="TX" <%= user.address?.state === 'TX' ? 'selected' : '' %>>Texas</option>
+                <!-- Add more states as needed -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="zipCode">ZIP Code *</label>
+              <input type="text" id="zipCode" name="zipCode" required 
+                     value="<%= user.address?.zipCode || '' %>">
+            </div>
+          </div>
+        </section>
+
+        <!-- Payment Information -->
+        <section class="checkout-section">
+          <h2><i class="fas fa-credit-card"></i> Payment Information</h2>
+          
+          <div class="payment-methods">
+            <div class="payment-method">
+              <input type="radio" id="credit-card" name="paymentMethod" value="credit_card" checked>
+              <label for="credit-card">
+                <i class="fas fa-credit-card"></i>
+                Credit Card
+              </label>
+            </div>
+            <div class="payment-method">
+              <input type="radio" id="paypal" name="paymentMethod" value="paypal">
+              <label for="paypal">
+                <i class="fab fa-paypal"></i>
+                PayPal
+              </label>
+            </div>
+          </div>
+
+          <div class="credit-card-form">
+            <div class="form-group">
+              <label for="cardNumber">Card Number *</label>
+              <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456">
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="expiryDate">Expiry Date *</label>
+                <input type="text" id="expiryDate" name="expiryDate" placeholder="MM/YY">
+              </div>
+              <div class="form-group">
+                <label for="cvv">CVV *</label>
+                <input type="text" id="cvv" name="cvv" placeholder="123">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="cardName">Name on Card *</label>
+              <input type="text" id="cardName" name="cardName" 
+                     value="<%= user.firstName ? user.firstName + ' ' + user.lastName : '' %>">
+            </div>
+          </div>
+        </section>
+
+        <!-- Order Notes -->
+        <section class="checkout-section">
+          <h2><i class="fas fa-sticky-note"></i> Order Notes</h2>
+          <div class="form-group">
+            <label for="notes">Special Instructions (Optional)</label>
+            <textarea id="notes" name="notes" rows="3" 
+                      placeholder="Any special instructions for your order..."></textarea>
+          </div>
+        </section>
+      </div>
+
+      <div class="checkout-sidebar">
+        <div class="order-summary">
+          <h3>Order Summary</h3>
+          
+          <div class="order-items">
+            <% cartItems.forEach(item => { %>
+              <div class="order-item">
+                <div class="item-image">
+                  <img src="<%= item.product.image %>" alt="<%= item.product.name %>">
+                </div>
+                <div class="item-info">
+                  <h4><%= item.product.name %></h4>
+                  <p>Qty: <%= item.quantity %></p>
+                  <span class="item-price">$<%= (item.product.price * item.quantity).toFixed(2) %></span>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+
+          <div class="summary-totals">
+            <div class="summary-line">
+              <span>Subtotal</span>
+              <span>$<%= subtotal.toFixed(2) %></span>
+            </div>
+            <div class="summary-line">
+              <span>Shipping</span>
+              <span><%= subtotal >= 50 ? 'FREE' : '$9.99' %></span>
+            </div>
+            <div class="summary-line">
+              <span>Tax</span>
+              <span>$<%= tax.toFixed(2) %></span>
+            </div>
+            <div class="summary-line total">
+              <span>Total</span>
+              <span>$<%= total.toFixed(2) %></span>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-place-order">
+            <i class="fas fa-lock"></i>
+            Place Order - $<%= total.toFixed(2) %>
+          </button>
+
+          <div class="security-info">
+            <p><i class="fas fa-shield-alt"></i> Your payment information is secure and encrypted</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</main>
+
+<%- include('partials/footer') %>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Payment method toggle
+  document.querySelectorAll('input[name="paymentMethod"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+      const creditCardForm = document.querySelector('.credit-card-form');
+      if (this.value === 'credit_card') {
+        creditCardForm.style.display = 'block';
+      } else {
+        creditCardForm.style.display = 'none';
+      }
+    });
+  });
+
+  // Form validation
+  const form = document.querySelector('.checkout-form');
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Basic validation
+    const requiredFields = form.querySelectorAll('[required]');
+    let isValid = true;
+    
+    requiredFields.forEach(field => {
+      if (!field.value.trim()) {
+        field.classList.add('error');
+        isValid = false;
+      } else {
+        field.classList.remove('error');
+      }
+    });
+    
+    if (isValid) {
+      // Show loading state
+      const submitBtn = form.querySelector('.btn-place-order');
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+      submitBtn.disabled = true;
+      
+      // Submit form
+      form.submit();
+    }
+  });
+
+  // Card number formatting
+  const cardNumber = document.getElementById('cardNumber');
+  cardNumber.addEventListener('input', function(e) {
+    let value = e.target.value.replace(/\s/g, '').replace(/[^0-9]/gi, '');
+    let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+    e.target.value = formattedValue;
+  });
+
+  // Expiry date formatting
+  const expiryDate = document.getElementById('expiryDate');
+  expiryDate.addEventListener('input', function(e) {
+    let value = e.target.value.replace(/\D/g, '');
+    if (value.length >= 2) {
+      value = value.substring(0, 2) + '/' + value.substring(2, 4);
+    }
+    e.target.value = value;
+  });
+});
+</script>
