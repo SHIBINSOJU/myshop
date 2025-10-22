@@ -1,0 +1,343 @@
+<%- include('partials/header', { title: 'My Profile' }) %>
+<%- include('partials/navbar') %>
+
+<main class="container">
+  <div class="profile-header">
+    <h1 class="page-title">My Profile</h1>
+    <div class="profile-nav">
+      <button class="nav-btn active" data-tab="overview">Overview</button>
+      <button class="nav-btn" data-tab="orders">Orders</button>
+      <button class="nav-btn" data-tab="wishlist">Wishlist</button>
+      <button class="nav-btn" data-tab="settings">Settings</button>
+    </div>
+  </div>
+
+  <div class="profile-container">
+    <!-- Overview Tab -->
+    <div class="profile-tab active" id="overview">
+      <div class="profile-cards">
+        <div class="profile-card">
+          <div class="card-icon">
+            <i class="fas fa-user"></i>
+          </div>
+          <div class="card-content">
+            <h3>Personal Information</h3>
+            <p><%= user.firstName || 'Not set' %> <%= user.lastName || '' %></p>
+            <p><%= user.email %></p>
+            <button class="btn-edit" onclick="editProfile()">Edit Profile</button>
+          </div>
+        </div>
+
+        <div class="profile-card">
+          <div class="card-icon">
+            <i class="fas fa-shopping-bag"></i>
+          </div>
+          <div class="card-content">
+            <h3>Recent Orders</h3>
+            <p><%= user.orders?.length || 0 %> total orders</p>
+            <a href="#orders" class="btn-view" onclick="switchTab('orders')">View Orders</a>
+          </div>
+        </div>
+
+        <div class="profile-card">
+          <div class="card-icon">
+            <i class="fas fa-heart"></i>
+          </div>
+          <div class="card-content">
+            <h3>Wishlist</h3>
+            <p><%= user.wishlist?.length || 0 %> saved items</p>
+            <a href="#wishlist" class="btn-view" onclick="switchTab('wishlist')">View Wishlist</a>
+          </div>
+        </div>
+
+        <div class="profile-card">
+          <div class="card-icon">
+            <i class="fas fa-map-marker-alt"></i>
+          </div>
+          <div class="card-content">
+            <h3>Default Address</h3>
+            <% if (user.address?.street) { %>
+              <p><%= user.address.street %></p>
+              <p><%= user.address.city %>, <%= user.address.state %> <%= user.address.zipCode %></p>
+            <% } else { %>
+              <p>No address set</p>
+            <% } %>
+            <button class="btn-edit" onclick="editAddress()">Edit Address</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Activity -->
+      <div class="recent-activity">
+        <h2>Recent Activity</h2>
+        <div class="activity-list">
+          <div class="activity-item">
+            <div class="activity-icon">
+              <i class="fas fa-shopping-cart"></i>
+            </div>
+            <div class="activity-content">
+              <p>Added items to cart</p>
+              <span class="activity-time">2 hours ago</span>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-icon">
+              <i class="fas fa-heart"></i>
+            </div>
+            <div class="activity-content">
+              <p>Added items to wishlist</p>
+              <span class="activity-time">1 day ago</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Orders Tab -->
+    <div class="profile-tab" id="orders">
+      <div class="orders-header">
+        <h2>Order History</h2>
+        <div class="order-filters">
+          <select class="filter-select" id="order-status-filter">
+            <option value="">All Orders</option>
+            <option value="pending">Pending</option>
+            <option value="processing">Processing</option>
+            <option value="shipped">Shipped</option>
+            <option value="delivered">Delivered</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="orders-list">
+        <% if (user.orders && user.orders.length > 0) { %>
+          <% user.orders.forEach(order => { %>
+            <div class="order-card" data-status="<%= order.status %>">
+              <div class="order-header">
+                <div class="order-info">
+                  <h3>Order #<%= order.orderNumber %></h3>
+                  <p class="order-date"><%= new Date(order.createdAt).toLocaleDateString() %></p>
+                </div>
+                <div class="order-status">
+                  <span class="status-badge status-<%= order.status %>"><%= order.status.charAt(0).toUpperCase() + order.status.slice(1) %></span>
+                </div>
+              </div>
+
+              <div class="order-items">
+                <% order.items.forEach(item => { %>
+                  <div class="order-item">
+                    <img src="<%= item.product.image %>" alt="<%= item.product.name %>">
+                    <div class="item-details">
+                      <h4><%= item.product.name %></h4>
+                      <p>Qty: <%= item.quantity %></p>
+                      <span class="item-price">$<%= item.price.toFixed(2) %></span>
+                    </div>
+                  </div>
+                <% }) %>
+              </div>
+
+              <div class="order-footer">
+                <div class="order-total">
+                  <span>Total: $<%= order.total.toFixed(2) %></span>
+                </div>
+                <div class="order-actions">
+                  <button class="btn-view-order" onclick="viewOrder('<%= order._id %>')">View Details</button>
+                  <% if (order.status === 'delivered') { %>
+                    <button class="btn-reorder" onclick="reorder('<%= order._id %>')">Reorder</button>
+                  <% } %>
+                </div>
+              </div>
+            </div>
+          <% }) %>
+        <% } else { %>
+          <div class="empty-state">
+            <i class="fas fa-shopping-bag"></i>
+            <h3>No orders yet</h3>
+            <p>You haven't placed any orders yet. Start shopping to see your order history here.</p>
+            <a href="/products" class="btn-shop-now">Start Shopping</a>
+          </div>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Wishlist Tab -->
+    <div class="profile-tab" id="wishlist">
+      <div class="wishlist-header">
+        <h2>My Wishlist</h2>
+        <span class="wishlist-count"><%= user.wishlist?.length || 0 %> items</span>
+      </div>
+
+      <div class="wishlist-grid">
+        <% if (user.wishlist && user.wishlist.length > 0) { %>
+          <% user.wishlist.forEach(product => { %>
+            <%- include('partials/product-card', { product: product }) %>
+          <% }) %>
+        <% } else { %>
+          <div class="empty-state">
+            <i class="fas fa-heart"></i>
+            <h3>Your wishlist is empty</h3>
+            <p>Save items you love by clicking the heart icon on any product.</p>
+            <a href="/products" class="btn-shop-now">Browse Products</a>
+          </div>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Settings Tab -->
+    <div class="profile-tab" id="settings">
+      <div class="settings-container">
+        <div class="settings-section">
+          <h2>Account Settings</h2>
+          <form class="settings-form" action="/profile/update" method="POST">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" name="firstName" value="<%= user.firstName || '' %>">
+              </div>
+              <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" name="lastName" value="<%= user.lastName || '' %>">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" name="email" value="<%= user.email %>" readonly>
+              <small>Email cannot be changed</small>
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" name="phone" value="<%= user.phone || '' %>">
+            </div>
+
+            <button type="submit" class="btn-save">Save Changes</button>
+          </form>
+        </div>
+
+        <div class="settings-section">
+          <h2>Address Information</h2>
+          <form class="settings-form" action="/profile/address" method="POST">
+            <div class="form-group">
+              <label for="street">Street Address</label>
+              <input type="text" id="street" name="street" value="<%= user.address?.street || '' %>">
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="city">City</label>
+                <input type="text" id="city" name="city" value="<%= user.address?.city || '' %>">
+              </div>
+              <div class="form-group">
+                <label for="state">State</label>
+                <input type="text" id="state" name="state" value="<%= user.address?.state || '' %>">
+              </div>
+              <div class="form-group">
+                <label for="zipCode">ZIP Code</label>
+                <input type="text" id="zipCode" name="zipCode" value="<%= user.address?.zipCode || '' %>">
+              </div>
+            </div>
+
+            <button type="submit" class="btn-save">Update Address</button>
+          </form>
+        </div>
+
+        <div class="settings-section">
+          <h2>Preferences</h2>
+          <div class="preferences">
+            <div class="preference-item">
+              <label class="checkbox-label">
+                <input type="checkbox" name="emailNotifications" checked>
+                <span class="checkmark"></span>
+                Email notifications for new products
+              </label>
+            </div>
+            <div class="preference-item">
+              <label class="checkbox-label">
+                <input type="checkbox" name="orderUpdates" checked>
+                <span class="checkmark"></span>
+                Order updates via email
+              </label>
+            </div>
+            <div class="preference-item">
+              <label class="checkbox-label">
+                <input type="checkbox" name="marketingEmails">
+                <span class="checkmark"></span>
+                Marketing emails and promotions
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<%- include('partials/footer') %>
+
+<script>
+function switchTab(tabName) {
+  // Hide all tabs
+  document.querySelectorAll('.profile-tab').forEach(tab => {
+    tab.classList.remove('active');
+  });
+  
+  // Remove active class from all nav buttons
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  
+  // Show selected tab
+  document.getElementById(tabName).classList.add('active');
+  
+  // Add active class to clicked button
+  event.target.classList.add('active');
+}
+
+// Tab navigation
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const tabName = this.dataset.tab;
+    switchTab(tabName);
+  });
+});
+
+// Order status filter
+document.getElementById('order-status-filter').addEventListener('change', function() {
+  const status = this.value;
+  const orderCards = document.querySelectorAll('.order-card');
+  
+  orderCards.forEach(card => {
+    if (!status || card.dataset.status === status) {
+      card.style.display = 'block';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+});
+
+function viewOrder(orderId) {
+  // Implement order details modal or redirect
+  window.location.href = `/orders/${orderId}`;
+}
+
+function reorder(orderId) {
+  // Implement reorder functionality
+  fetch(`/orders/${orderId}/reorder`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' }
+  }).then(response => {
+    if (response.ok) {
+      window.location.href = '/cart';
+    }
+  });
+}
+
+function editProfile() {
+  switchTab('settings');
+}
+
+function editAddress() {
+  switchTab('settings');
+}
+</script>

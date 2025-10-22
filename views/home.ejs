@@ -1,41 +1,47 @@
 <%- include('partials/header', { title: 'Home' }) %>
 <%- include('partials/navbar') %>
 
-<main class="container">
-  
-  <div class="hero-section" style="text-align: center; padding: 3rem 0;">
-    <h1 class="page-title" style="margin-bottom: 1rem;">Welcome to <%= brandName %></h1>
-    <p style="text-align: center; font-size: 1.2rem; margin-bottom: 2rem; color: #555;">
-      Your new one-stop shop for modern apparel.
-    </p>
-    <a href="/products" class="btn-submit" style="display: inline-block; width: 200px; text-align: center;">
-      Shop Now
-    </a>
-  </div>
+<main class="pt-20">
+  <!-- Hero Section -->
+  <section class="relative h-96 bg-cover bg-center flex flex-col justify-center items-center text-white text-center" style="background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');">
+    <div class="max-w-4xl mx-auto px-4">
+      <h1 class="text-5xl md:text-6xl font-bold mb-4">Discover Your Style.</h1>
+      <p class="text-xl md:text-2xl mb-8">Curated Fashion for the Modern Individual.</p>
+      <a href="/products" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-6 rounded-full transition-colors duration-300 inline-block">
+        Shop Now
+      </a>
+    </div>
+  </section>
 
-  <% if (locals.categorySections && categorySections.length > 0) { %>
-    <% categorySections.forEach(section => { %>
-      <section class="category-section">
-        <h2 class="category-title">
-          <%= section.name.charAt(0).toUpperCase() + section.name.slice(1) %> Picks
-        </h2>
-        
-        <div class="product-grid">
-          <% section.products.forEach(product => { %>
-            <%- include('partials/product-card', { product: product }) %>
-          <% }) %>
-        </div>
-        
-        <a href="/products?category=<%= section.name %>" class="btn-view-all">
-          View all <%= section.name %> →
-        </a>
-      </section>
-    <% }) %>
-  <% } else { %>
-    <p style="text-align: center; margin-top: 4rem; font-size: 1.1rem;">
-      No products available at this time.
-    </p>
-  <% } %>
-  </main>
+  <!-- Featured Categories -->
+  <div class="container mx-auto px-4 py-16">
+    <% if (locals.categorySections && categorySections.length > 0) { %>
+      <% categorySections.forEach(section => { %>
+        <section class="mb-16">
+          <div class="flex justify-between items-center mb-8">
+            <h2 class="text-3xl font-bold text-gray-800">
+              <%= section.name.charAt(0).toUpperCase() + section.name.slice(1) %> Picks
+            </h2>
+            <a href="/products?category=<%= section.name %>" class="text-emerald-500 hover:text-emerald-600 font-semibold transition-colors duration-200">
+              View all <%= section.name %> →
+            </a>
+          </div>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <% section.products.forEach(product => { %>
+              <%- include('partials/product-card', { product: product }) %>
+            <% }) %>
+          </div>
+        </section>
+      <% }) %>
+    <% } else { %>
+      <div class="text-center py-16">
+        <i class="fas fa-shopping-bag text-6xl text-gray-300 mb-4"></i>
+        <h3 class="text-2xl font-bold text-gray-600 mb-2">No products available</h3>
+        <p class="text-gray-500">Check back soon for new arrivals!</p>
+      </div>
+    <% } %>
+  </div>
+</main>
 
 <%- include('partials/footer') %>

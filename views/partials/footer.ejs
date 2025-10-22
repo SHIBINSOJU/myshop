@@ -1,10 +1,77 @@
-  <footer class="footer">
-    <p>© <%= new Date().getFullYear() %> <%= brandName %>. All rights reserved.</p>
-    <div class="social-links">
-      <a href="https://instagram.com/YourBrandInstagram" target="_blank">Instagram</a>
+<footer class="bg-gray-800 text-gray-200 p-8 mt-12">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <!-- About Us -->
+      <div>
+        <h3 class="text-xl font-bold text-white mb-4">About Us</h3>
+        <p class="text-gray-300 mb-4">
+          Pixelcart offers the latest trends in modern apparel and accessories. Find your perfect style with us.
+        </p>
+        <div class="flex space-x-4">
+          <a href="#" class="text-gray-400 hover:text-emerald-500 transition-colors duration-200">
+            <i class="fab fa-instagram text-xl"></i>
+          </a>
+          <a href="#" class="text-gray-400 hover:text-emerald-500 transition-colors duration-200">
+            <i class="fab fa-facebook-f text-xl"></i>
+          </a>
+          <a href="#" class="text-gray-400 hover:text-emerald-500 transition-colors duration-200">
+            <i class="fab fa-twitter text-xl"></i>
+          </a>
+        </div>
       </div>
-  </footer>
-  
-  <script src="/js/main.js"></script>
-</body>
-</html>
+
+      <!-- Customer Service -->
+      <div>
+        <h3 class="text-xl font-bold text-white mb-4">Customer Service</h3>
+        <ul class="space-y-2">
+          <li><a href="/faq" class="text-gray-300 hover:text-emerald-500 transition-colors duration-200">FAQ</a></li>
+          <li><a href="/shipping" class="text-gray-300 hover:text-emerald-500 transition-colors duration-200">Shipping</a></li>
+          <li><a href="/returns" class="text-gray-300 hover:text-emerald-500 transition-colors duration-200">Returns</a></li>
+          <li><a href="/contact" class="text-gray-300 hover:text-emerald-500 transition-colors duration-200">Contact Us</a></li>
+        </ul>
+      </div>
+
+      <!-- Quick Links -->
+      <div>
+        <h3 class="text-xl font-bold text-white mb-4">Quick Links</h3>
+        <ul class="space-y-2">
+          <li><a href="/" class="text-gray-300 hover:text-emerald-500 transition-colors duration-200">Home</a></li>
+          <li><a href="/products" class="text-gray-300 hover:text-emerald-500 transition-colors duration-200">Shop</a></li>
+          <li><a href="/wishlist" class="text-gray-300 hover:text-emerald-500 transition-colors duration-200">Wishlist</a></li>
+          <% if (locals.user) { %>
+            <li><a href="/profile" class="text-gray-300 hover:text-emerald-500 transition-colors duration-200">Account</a></li>
+          <% } %>
+        </ul>
+      </div>
+
+      <!-- Newsletter -->
+      <div>
+        <h3 class="text-xl font-bold text-white mb-4">Newsletter</h3>
+        <p class="text-gray-300 mb-4">Subscribe to get updates on new products and exclusive offers.</p>
+        <form class="flex flex-col space-y-2">
+          <input 
+            type="email" 
+            placeholder="Enter your email" 
+            class="px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+          >
+          <button 
+            type="submit" 
+            class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded-md transition-colors duration-300"
+          >
+            Subscribe
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="border-t border-gray-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+      <p class="text-gray-400 text-sm">© 2024 Pixelcart. All rights reserved.</p>
+      <div class="flex space-x-6 mt-4 md:mt-0">
+        <a href="/privacy" class="text-gray-400 hover:text-emerald-500 transition-colors duration-200 text-sm">Privacy Policy</a>
+        <a href="/terms" class="text-gray-400 hover:text-emerald-500 transition-colors duration-200 text-sm">Terms of Service</a>
+        <a href="/cookies" class="text-gray-400 hover:text-emerald-500 transition-colors duration-200 text-sm">Cookie Policy</a>
+      </div>
+    </div>
+  </div>
+</footer>
