@@ -502,6 +502,11 @@ img {
   /* Resets old spacing rules */
   margin-top: 0;
   padding-top: 0;
+
+  /* Hide the (num ratings) part if it exists */
+  .product-num-ratings {
+    display: none;
+  }
 }
 
 /* New style for the rating itself to be readable on an image */
@@ -512,6 +517,48 @@ img {
   border-radius: 6px;
   font-size: 0.9rem;
   font-weight: 700;
-  border: 1px solid rgba(255, 255, 255, 0.1); /* Optional: subtle border */
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* --- Wishlist Button Overlay --- */
+
+.btn-wishlist {
+  position: absolute;
+  top: 0.5rem;   /* 8px from top */
+  right: 0.5rem;  /* 8px from right */
+  z-index: 10;
+  
+  /* New overlay styling */
+  background-color: rgba(255, 255, 255, 0.85); /* White, semi-transparent background */
+  color: #1a1a1a; /* Dark text */
+  border-radius: 50%; /* Make it a circle */
+  height: 36px;
+  width: 36px;
+  font-size: 1.2rem;
+  line-height: 36px; /* Helps center the heart */
+  text-align: center;
+  padding: 0;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.btn-wishlist:hover {
+  background-color: #fff;
+  color: #ff6b6b; /* Red heart on hover */
+  transform: scale(1.1);
+}
+
+.btn-wishlist.active {
+  background-color: #e53935; /* Red background when active */
+  color: #fff; /* White heart */
+}
+
+
+/* --- Update Product Actions --- */
+
+.product-actions {
+  /* This now only has one button */
+  grid-template-columns: 1fr; /* Make "Buy Now" fill the width */
+  gap: 0; /* Remove gap */
+  }
