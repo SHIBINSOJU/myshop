@@ -1,0 +1,23 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <a href="/" class="navbar-logo-link">
+      <img src="/images/logo.png" alt="Logo" class="navbar-logo">
+      <span class="navbar-brand-name"><%= brandName %></span>
+    </a>
+    
+    <ul class="navbar-menu">
+      <li><a href="/" class="navbar-link">Home</a></li>
+      <li><a href="/products" class="navbar-link">Products</a></li>
+      <li><a href="/wishlist" class="navbar-link">Wishlist</a></li>
+      <li><a href="/contact" class="navbar-link">Contact</a></li>
+      
+      <% if (locals.user) { %>
+        <li><a href="/logout" class="navbar-button">Logout</a></li>
+      <% } else { %>
+        <li><a href="/login" class="navbar-button">Login</a></li>
+      <% } %>
+    </ul>
+    
+    <div class="navbar-toggle">☰</div>
+  </div>
+</nav>
