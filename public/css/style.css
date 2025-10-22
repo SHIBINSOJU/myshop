@@ -300,3 +300,57 @@ img {
 .btn-buy:hover {
   background-color: var(--accent-hover);
 }
+/* --- Mobile Responsive --- */
+@media (max-width: 768px) {
+
+  /* --- Navbar --- */
+  .navbar-menu {
+    display: none; /* Hide the menu by default */
+    flex-direction: column; /* Stack links vertically */
+    position: absolute;
+    top: 65px; /* Position below the navbar */
+    left: 0;
+    width: 100%;
+    background-color: var(--bg-color);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 0;
+  }
+
+  /* This class will be toggled by JavaScript */
+  .navbar-menu.active {
+    display: flex;
+  }
+
+  .navbar-link, .navbar-button {
+    width: 100%;
+    text-align: center;
+    padding: 1rem 0;
+  }
+
+  .navbar-button {
+    margin: 0.5rem 1rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .navbar-toggle {
+    display: block; /* Show the hamburger icon */
+    font-size: 1.75rem;
+    cursor: pointer;
+  }
+
+  /* --- Forms --- */
+  .form-container {
+    margin: 2rem 1rem;
+    padding: 1.5rem;
+  }
+  
+  /* --- Products --- */
+  .product-grid {
+    /* Show one column on small screens */
+    grid-template-columns: 1fr;
+  }
+  
+  .page-title {
+    font-size: 2rem;
+  }
+}
