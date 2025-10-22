@@ -5,7 +5,7 @@
   <h1><%= product.name %></h1>
   <img src="<%= product.image %>" alt="<%= product.name %>" style="width: 300px;">
 
-  <h2>$<%= product.price.toFixed(2) %></h2>
+  <h2><%= formatPrice(product.price) %></h2>
 
   <p><%= product.description %></p>
 

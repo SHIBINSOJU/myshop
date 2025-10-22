@@ -31,9 +31,7 @@
   <div class="product-grid">
     <% if (products.length > 0) { %>
       <% products.forEach(product => { %>
-        
-        <%- include('partials/product-card', { product: product }) %>
-        
+        <%- include('partials/product-card', { product: product, showButtons: false }) %>
       <% }) %>
     <% } else { %>
       <p style="text-align: center; font-size: 1.1rem; grid-column: 1 / -1;">

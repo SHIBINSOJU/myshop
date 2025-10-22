@@ -8,9 +8,7 @@
     
     <div class="product-grid">
       <% wishlistItems.forEach(item => { %>
-        
-        <%- include('partials/product-card', { product: item }) %>
-        
+        <%- include('partials/product-card', { product: item, showButtons: false }) %>
       <% }) %>
     </div>
 

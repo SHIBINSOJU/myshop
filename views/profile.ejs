@@ -130,7 +130,7 @@
                     <div class="item-details">
                       <h4><%= item.product.name %></h4>
                       <p>Qty: <%= item.quantity %></p>
-                      <span class="item-price">$<%= item.price.toFixed(2) %></span>
+                      <span class="item-price"><%= formatPrice(item.price) %></span>
                     </div>
                   </div>
                 <% }) %>
@@ -138,7 +138,7 @@
 
               <div class="order-footer">
                 <div class="order-total">
-                  <span>Total: $<%= order.total.toFixed(2) %></span>
+                  <span>Total: <%= formatPrice(order.total) %></span>
                 </div>
                 <div class="order-actions">
                   <button class="btn-view-order" onclick="viewOrder('<%= order._id %>')">View Details</button>

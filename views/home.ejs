@@ -27,9 +27,9 @@
             </a>
           </div>
           
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="product-grid">
             <% section.products.forEach(product => { %>
-              <%- include('partials/product-card', { product: product }) %>
+              <%- include('partials/product-card', { product: product, showButtons: false }) %>
             <% }) %>
           </div>
         </section>

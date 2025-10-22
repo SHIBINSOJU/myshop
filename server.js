@@ -45,6 +45,14 @@ app.use(session({
 app.use(async (req, res, next) => {
   res.locals.brandName = "Pixelcart"; // Make brand name global
   res.locals.user = null; // Default to null
+  // Global currency formatter: INR
+  res.locals.formatPrice = (value) => {
+    try {
+      return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(Number(value || 0));
+    } catch (e) {
+      return `₹${Number(value || 0).toLocaleString('en-IN')}`;
+    }
+  };
 
   if (req.session.userId) {
     // If there's a user ID in the session, fetch the user from DB

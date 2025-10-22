@@ -94,7 +94,7 @@
           </div>
           <div>
             <p class="text-sm font-medium text-gray-600">Total Revenue</p>
-            <p class="text-2xl font-bold text-gray-900">$<%= stats?.totalRevenue?.toFixed(2) || '0.00' %></p>
+            <p class="text-2xl font-bold text-gray-900"><%= formatPrice(stats?.totalRevenue || 0) %></p>
           </div>
         </div>
       </div>
@@ -151,9 +151,9 @@
                     </span>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="text-sm text-gray-900">$<%= product.price.toFixed(2) %></div>
+                    <div class="text-sm text-gray-900"><%= formatPrice(product.price) %></div>
                     <% if (product.originalPrice && product.originalPrice > product.price) { %>
-                      <div class="text-sm text-gray-500 line-through">$<%= product.originalPrice.toFixed(2) %></div>
+                      <div class="text-sm text-gray-500 line-through"><%= formatPrice(product.originalPrice) %></div>
                     <% } %>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
@@ -226,7 +226,7 @@
                   </div>
                 </td>
                 <td><%= order.items.length %> items</td>
-                <td>$<%= order.total.toFixed(2) %></td>
+                <td><%= formatPrice(order.total) %></td>
                 <td>
                   <span class="status-badge status-<%= order.status %>">
                     <%= order.status.charAt(0).toUpperCase() + order.status.slice(1) %>
@@ -334,7 +334,7 @@
                 <img src="<%= product.image %>" alt="<%= product.name %>">
                 <div class="product-details">
                   <h4><%= product.name %></h4>
-                  <p>$<%= product.price.toFixed(2) %></p>
+                  <p><%= formatPrice(product.price) %></p>
                 </div>
               </div>
             <% }) %>
