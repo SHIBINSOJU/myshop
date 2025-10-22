@@ -11,12 +11,12 @@ const transporter = nodemailer.createTransport({
 
 const sendOTPEmail = async (email, otp) => {
   const mailOptions = {
-    from: `"YourBrandName" <${process.env.EMAIL_USER}>`,
+    from: `"Pixelcart" <${process.env.EMAIL_USER}>`,
     to: email,
     subject: 'Your One-Time Password (OTP)',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
-        <h2 style="text-align: center; color: #333;">YourBrandName Login</h2>
+        <h2 style="text-align: center; color: #333;">Pixelcart Login</h2>
         <p style="font-size: 16px;">Hello,</p>
         <p style="font-size: 16px;">Your One-Time Password (OTP) for logging in is:</p>
         <p style="text-align: center; font-size: 24px; font-weight: bold; background: #f4f4f4; padding: 15px; border-radius: 5px; letter-spacing: 2px;">
@@ -24,7 +24,7 @@ const sendOTPEmail = async (email, otp) => {
         </p>
         <p style="font-size: 16px;">This OTP is valid for <strong>5 minutes</strong>. Please do not share this code with anyone.</p>
         <hr>
-        <p style="font-size: 12px; color: #888; text-align: center;">© ${new Date().getFullYear()} YourBrandName</p>
+        <p style="font-size: 12px; color: #888; text-align: center;">© ${new Date().getFullYear()} Pixelcart</p>
       </div>
     `,
   };

@@ -43,7 +43,7 @@ app.use(session({
 // --- CUSTOM MIDDLEWARE ---
 // This makes session user and brandName available to all EJS templates
 app.use(async (req, res, next) => {
-  res.locals.brandName = "YourBrandName"; // Make brand name global
+  res.locals.brandName = "Pixelcart"; // Make brand name global
   res.locals.user = null; // Default to null
 
   if (req.session.userId) {

@@ -4,7 +4,7 @@ const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const { sendOTPEmail } = require('../utils/mailer');
 
-const BRAND_NAME = "YourBrandName"; // Use this for page titles
+const BRAND_NAME = "Pixelcart"; // Use this for page titles
 
 // 1. Show Login Page
 router.get('/login', (req, res) => {
