@@ -5,10 +5,15 @@
   <h1 class="page-title">All Products</h1>
 
   <form action="/products" method="GET" class="filter-bar" id="filter-form">
+    <input type="hidden" name="page" value="<%= page || 1 %>">
     <div class="filter-group">
-      <label for="category">Filter by Category:</label>
+      <label for="q">Search:</label>
+      <input type="text" id="q" name="q" value="<%= q || '' %>" class="filter-select" placeholder="Search name, brand, category...">
+    </div>
+    <div class="filter-group">
+      <label for="category">Category:</label>
       <select name="category" id="category" class="filter-select">
-        <option value="">All Categories</option>
+        <option value="">All</option>
         <% categories.forEach(cat => { %>
           <option value="<%= cat %>" <%= (locals.currentCategory === cat) ? 'selected' : '' %>>
             <%= cat.charAt(0).toUpperCase() + cat.slice(1) %>
@@ -16,14 +21,31 @@
         <% }) %>
       </select>
     </div>
-
     <div class="filter-group">
-      <label for="sort">Sort by:</label>
+      <label for="minPrice">Min Price:</label>
+      <input type="number" id="minPrice" name="minPrice" value="<%= minPrice || '' %>" class="filter-select" min="0">
+    </div>
+    <div class="filter-group">
+      <label for="maxPrice">Max Price:</label>
+      <input type="number" id="maxPrice" name="maxPrice" value="<%= maxPrice || '' %>" class="filter-select" min="0">
+    </div>
+    <div class="filter-group">
+      <label for="minRating">Min Rating:</label>
+      <select name="minRating" id="minRating" class="filter-select">
+        <option value="">Any</option>
+        <% [5,4.5,4,3.5,3].forEach(r => { %>
+          <option value="<%= r %>" <%= (String(minRating) === String(r)) ? 'selected' : '' %>><%= r %>+</option>
+        <% }) %>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label for="sort">Sort:</label>
       <select name="sort" id="sort" class="filter-select">
         <option value="default" <%= (locals.currentSort === 'default') ? 'selected' : '' %>>Newest</option>
         <option value="price-low-high" <%= (locals.currentSort === 'price-low-high') ? 'selected' : '' %>>Price: Low to High</option>
         <option value="price-high-low" <%= (locals.currentSort === 'price-high-low') ? 'selected' : '' %>>Price: High to Low</option>
         <option value="rating" <%= (locals.currentSort === 'rating') ? 'selected' : '' %>>Rating: High to Low</option>
+        <option value="popularity" <%= (locals.currentSort === 'popularity') ? 'selected' : '' %>>Popularity</option>
       </select>
     </div>
   </form>
@@ -39,6 +61,22 @@
       </p>
     <% } %>
   </div>
+
+  <!-- Pagination -->
+  <% if (totalPages && totalPages > 1) { %>
+    <div style="display:flex; gap:0.5rem; justify-content:center; margin-top:1.5rem;">
+      <% const current = page || 1; %>
+      <% const buildLink = (p) => {
+           const params = new URLSearchParams({ q: q||'', category: currentCategory||'', minPrice: minPrice||'', maxPrice: maxPrice||'', minRating: minRating||'', sort: currentSort||'default', page: String(p) });
+           return `/products?${params.toString()}`;
+         } %>
+      <a href="<%= buildLink(Math.max(1, current-1)) %>" class="btn-secondary">Prev</a>
+      <% for (let i = 1; i <= totalPages; i++) { %>
+        <a href="<%= buildLink(i) %>" class="btn-secondary" style="<%= i===current ? 'background: var(--accent-color); color: white;' : '' %>"><%= i %></a>
+      <% } %>
+      <a href="<%= buildLink(Math.min(totalPages, current+1)) %>" class="btn-secondary">Next</a>
+    </div>
+  <% } %>
 </main>
 
 <%- include('partials/footer') %>

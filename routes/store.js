@@ -53,38 +53,78 @@ router.get('/contact', (req, res) => {
   res.render('contact', { title: 'Contact Us' });
 });
 
+// Contact Form Submission
+router.post('/contact', async (req, res) => {
+  try {
+    const ContactMessage = require('../models/contactMessage');
+    const { name, email, message } = req.body;
+    if (!name || !email || !message) {
+      return res.status(400).render('contact', { title: 'Contact Us', error: 'All fields are required.' });
+    }
+    await ContactMessage.create({ name, email, message });
+    // Show success and clear form
+    return res.render('contact', { title: 'Contact Us', success: true });
+  } catch (e) {
+    console.error('Contact form error:', e);
+    return res.status(500).render('contact', { title: 'Contact Us', error: 'Something went wrong. Please try again.' });
+  }
+});
+
 // --- Protected Routes ---
 
 // Products Page
 router.get('/products', isAuthenticated, async (req, res) => {
   try {
-    const { category, sort } = req.query;
-    
-    let filterQuery = {};
-    if (category) {
-      filterQuery.category = category;
+    const { category, sort, q, minPrice, maxPrice, minRating, page = 1 } = req.query;
+
+    const pageSize = 12;
+    const currentPage = Math.max(parseInt(page) || 1, 1);
+
+    const filterQuery = {};
+    if (category) filterQuery.category = category;
+    if (q) {
+      filterQuery.$or = [
+        { name: { $regex: q, $options: 'i' } },
+        { brand: { $regex: q, $options: 'i' } },
+        { category: { $regex: q, $options: 'i' } }
+      ];
+    }
+    if (minPrice || maxPrice) {
+      filterQuery.price = {};
+      if (minPrice) filterQuery.price.$gte = Number(minPrice);
+      if (maxPrice) filterQuery.price.$lte = Number(maxPrice);
+    }
+    if (minRating) {
+      filterQuery.rating = { $gte: Number(minRating) };
     }
 
     let sortQuery = {};
-    if (sort === 'price-low-high') {
-      sortQuery = { price: 1 };
-    } else if (sort === 'price-high-low') {
-      sortQuery = { price: -1 };
-    } else if (sort === 'rating') {
-      sortQuery = { rating: -1 };
-    } else {
-      sortQuery = { createdAt: -1 }; // Default: newest
-    }
+    if (sort === 'price-low-high') sortQuery = { price: 1 };
+    else if (sort === 'price-high-low') sortQuery = { price: -1 };
+    else if (sort === 'rating') sortQuery = { rating: -1 };
+    else if (sort === 'popularity') sortQuery = { numRatings: -1 };
+    else sortQuery = { createdAt: -1 };
 
-    const products = await Product.find(filterQuery).sort(sortQuery);
+    const totalCount = await Product.countDocuments(filterQuery);
+    const products = await Product.find(filterQuery)
+      .sort(sortQuery)
+      .skip((currentPage - 1) * pageSize)
+      .limit(pageSize);
     const categories = await Product.distinct('category');
-    
+
     res.render('products', {
       title: 'Products',
-      products: products,
-      categories: categories,
-      currentCategory: category, 
-      currentSort: sort 
+      products,
+      categories,
+      currentCategory: category,
+      currentSort: sort,
+      q,
+      minPrice,
+      maxPrice,
+      minRating,
+      page: currentPage,
+      totalPages: Math.max(Math.ceil(totalCount / pageSize), 1),
+      totalCount
     });
   } catch (error) {
     console.error(error);

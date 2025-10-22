@@ -2,22 +2,73 @@
 <%- include('partials/navbar') %>
 
 <main class="form-container">
-  <h1>Log In</h1>
-  <p style="text-align: center; margin-bottom: 1.5rem; color: #555;">
-    Enter your email to receive a One-Time Password (OTP).
-  </p>
-  
+  <h1>Welcome Back</h1>
   <% if (locals.error) { %>
     <div class="error-message"><%= error %></div>
   <% } %>
-
-  <form action="/send-otp" method="POST">
-    <div class="form-group">
-      <label for="email">Email Address</label>
-      <input type="email" id="email" name="email" class="form-input" required>
+  <% if (locals.success) { %>
+    <div class="alert alert-success" style="margin-bottom:1rem;">
+      <i class="fas fa-check-circle"></i> <%= success %>
     </div>
-    <button type="submit" class="btn-submit">Send OTP</button>
-  </form>
+  <% } %>
+
+  <div style="display:grid; gap:1.5rem;">
+    <!-- Email + Password Login -->
+    <section>
+      <h2 style="margin-bottom:0.75rem;">Login with Email & Password</h2>
+      <form action="/login" method="POST">
+        <div class="form-group">
+          <label for="login-email">Email Address</label>
+          <input type="email" id="login-email" name="email" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" name="password" class="form-input" required minlength="6">
+        </div>
+        <button type="submit" class="btn-submit">Log In</button>
+      </form>
+    </section>
+
+    <hr>
+
+    <!-- Signup + OTP Verification Trigger -->
+    <section>
+      <h2 style="margin-bottom:0.75rem;">New to Pixelcart? Create Account</h2>
+      <form action="/signup" method="POST">
+        <div class="form-group">
+          <label for="signup-first">First Name</label>
+          <input type="text" id="signup-first" name="firstName" class="form-input">
+        </div>
+        <div class="form-group">
+          <label for="signup-last">Last Name</label>
+          <input type="text" id="signup-last" name="lastName" class="form-input">
+        </div>
+        <div class="form-group">
+          <label for="signup-email">Email Address</label>
+          <input type="email" id="signup-email" name="email" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label for="signup-password">Password</label>
+          <input type="password" id="signup-password" name="password" class="form-input" required minlength="6">
+        </div>
+        <button type="submit" class="btn-submit">Create Account & Send OTP</button>
+      </form>
+    </section>
+
+    <hr>
+
+    <!-- Legacy OTP-only login -->
+    <section>
+      <h2 style="margin-bottom:0.75rem;">Or Login with Email OTP</h2>
+      <form action="/send-otp" method="POST">
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" class="form-input" required>
+        </div>
+        <button type="submit" class="btn-submit">Send OTP</button>
+      </form>
+    </section>
+  </div>
 </main>
 
 <%- include('partials/footer') %>

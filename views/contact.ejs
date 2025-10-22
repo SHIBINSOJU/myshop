@@ -2,6 +2,53 @@
 <%- include('partials/navbar') %>
 <main class="container">
   <h1 class="page-title">Contact Us</h1>
-  <p style="text-align: center;">Contact page coming soon.</p>
+  <% if (typeof error !== 'undefined' && error) { %>
+    <div class="error-message"><%= error %></div>
+  <% } %>
+  <form action="/contact" method="POST" class="settings-form" id="contact-form" style="max-width:600px; margin:0 auto;">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" class="form-input" required>
+    </div>
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" class="form-input" required>
+    </div>
+    <div class="form-group">
+      <label for="message">Message</label>
+      <textarea id="message" name="message" rows="5" class="form-input" required></textarea>
+    </div>
+    <button type="submit" class="btn-submit">Send Message</button>
+  </form>
+
+  <!-- Success Modal -->
+  <div id="contact-success" class="modal" style="<%= (typeof success !== 'undefined' && success) ? 'display:flex;' : '' %>">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Success</h2>
+        <button class="modal-close" id="contact-success-close">&times;</button>
+      </div>
+      <div class="modal-form">
+        <p>Your message has been sent successfully. We'll get back to you soon.</p>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-primary" id="contact-success-ok">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const successModal = document.getElementById('contact-success');
+      const closeBtn = document.getElementById('contact-success-close');
+      const okBtn = document.getElementById('contact-success-ok');
+      if (successModal) {
+        const close = () => { successModal.style.display = 'none'; };
+        if (closeBtn) closeBtn.addEventListener('click', close);
+        if (okBtn) okBtn.addEventListener('click', close);
+        window.addEventListener('click', (e) => { if (e.target === successModal) close(); });
+      }
+    })();
+  </script>
 </main>
 <%- include('partials/footer') %>

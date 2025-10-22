@@ -9,6 +9,16 @@
   <div class="hidden md:flex items-center space-x-8">
     <a href="/" class="text-gray-700 hover:text-emerald-500 transition-colors duration-200">Home</a>
     <a href="/products" class="text-gray-700 hover:text-emerald-500 transition-colors duration-200">Shop</a>
+    <!-- Search Bar -->
+    <div class="relative">
+      <input
+        id="navbar-search"
+        type="text"
+        placeholder="Search products..."
+        class="px-3 py-2 border border-gray-200 rounded-full w-64 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+      />
+      <i class="fas fa-search absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+    </div>
     
     <% if (locals.user) { %>
       <a href="/wishlist" class="text-gray-600 hover:text-emerald-500 ml-4 relative">
@@ -19,7 +29,10 @@
         <i class="fas fa-shopping-cart"></i>
         <span class="absolute -top-2 -right-2 bg-emerald-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center" id="cart-count"><%= user.cart?.length || 0 %></span>
       </a>
-      <a href="/profile" class="text-gray-700 hover:text-emerald-500 transition-colors duration-200">Account</a>
+      <a href="/profile" class="text-gray-700 hover:text-emerald-500 transition-colors duration-200 flex items-center gap-2">
+        <i class="fas fa-user-circle"></i>
+        <span><%= (user?.firstName ? user.firstName : user?.email?.split('@')[0]) || 'Account' %></span>
+      </a>
       <a href="/contact" class="text-gray-700 hover:text-emerald-500 transition-colors duration-200">Contact</a>
       
       <% if (user.email === process.env.ADMIN_EMAIL) { %>

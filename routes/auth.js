@@ -6,12 +6,81 @@ const { sendOTPEmail } = require('../utils/mailer');
 
 const BRAND_NAME = "Pixelcart"; // Use this for page titles
 
-// 1. Show Login Page
+// 1. Show Login/Signup Page
 router.get('/login', (req, res) => {
-  // Pass an error message if one exists from a failed attempt
   const error = req.session.error;
-  req.session.error = null; // Clear error after showing it
-  res.render('login', { title: 'Login', brandName: BRAND_NAME, error });
+  const success = req.session.success;
+  req.session.error = null;
+  req.session.success = null;
+  res.render('login', { title: 'Login', brandName: BRAND_NAME, error, success });
+});
+
+// 1b. Handle Email+Password Login
+router.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (!user || !user.passwordHash) {
+      req.session.error = 'Invalid credentials';
+      return res.redirect('/login');
+    }
+    const ok = await bcrypt.compare(password, user.passwordHash);
+    if (!ok) {
+      req.session.error = 'Invalid credentials';
+      return res.redirect('/login');
+    }
+    if (!user.isVerified) {
+      // force verification if not completed yet
+      req.session.emailForVerification = email;
+      req.session.error = 'Please verify your email to continue.';
+      return res.redirect('/verify');
+    }
+    req.session.userId = user._id;
+    return res.redirect('/products');
+  } catch (e) {
+    console.error(e);
+    req.session.error = 'Server error';
+    return res.redirect('/login');
+  }
+});
+
+// 1c. Handle Signup (creates user with password, sends OTP)
+router.post('/signup', async (req, res) => {
+  try {
+    const { email, password, firstName, lastName } = req.body;
+    let user = await User.findOne({ email });
+    if (user && user.passwordHash) {
+      req.session.error = 'Account already exists. Please log in.';
+      return res.redirect('/login');
+    }
+    if (!user) {
+      user = new User({ email, firstName, lastName });
+    } else {
+      user.firstName = firstName || user.firstName;
+      user.lastName = lastName || user.lastName;
+    }
+    const salt = await bcrypt.genSalt(10);
+    user.passwordHash = await bcrypt.hash(password, salt);
+
+    // Generate and email OTP for verification
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    user.otp = await bcrypt.hash(otp, salt);
+    user.otpExpires = new Date(Date.now() + 5 * 60 * 1000);
+    await user.save();
+
+    const sent = await sendOTPEmail(email, otp);
+    if (!sent) {
+      req.session.error = 'Could not send verification email. Try again.';
+      return res.redirect('/login');
+    }
+    req.session.emailForVerification = email;
+    req.session.success = 'Account created. Please verify OTP sent to your email.';
+    return res.redirect('/verify');
+  } catch (e) {
+    console.error(e);
+    req.session.error = 'Server error';
+    return res.redirect('/login');
+  }
 });
 
 // 2. Send OTP
@@ -113,6 +182,7 @@ router.post('/verify-otp', async (req, res) => {
     // Clear OTP fields
     user.otp = undefined;
     user.otpExpires = undefined;
+    user.isVerified = true;
     await user.save();
 
     // Clear temporary email from session

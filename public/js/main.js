@@ -69,6 +69,22 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   }
+
+  // --- Navbar Live Search ---
+  const navbarSearch = document.getElementById('navbar-search');
+  if (navbarSearch) {
+    let searchTimeout;
+    navbarSearch.addEventListener('input', () => {
+      const query = navbarSearch.value.trim();
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+        // Navigate to products with search query; server will process
+        const url = new URL(window.location.origin + '/products');
+        if (query) url.searchParams.set('q', query);
+        window.location.href = url.toString();
+      }, 300);
+    });
+  }
   
   // --- Mobile Menu Toggle ---
   const navbarToggle = document.querySelector('.navbar-toggle');
