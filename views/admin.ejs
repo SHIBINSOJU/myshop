@@ -16,6 +16,16 @@
         <label for="name">Product Name</label>
         <input type="text" id="name" name="name" class="form-input" required>
       </div>
+      
+      <div class="form-group">
+        <label for="brand">Brand</label>
+        <input type="text" id="brand" name="brand" class="form-input" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="description">Short Description (max 100 chars)</label>
+        <input type="text" id="description" name="description" class="form-input" required maxlength="100">
+      </div>
 
       <div class="form-group">
         <label for="image">Image URL</label>
@@ -28,6 +38,11 @@
       </div>
 
       <div class="form-group">
+        <label for="originalPrice">Original Price (Optional, for strikethrough)</label>
+        <input type="number" id="originalPrice" name="originalPrice" step="0.01" class="form-input">
+      </div>
+
+      <div class="form-group">
         <label for="category">Category</label>
         <input type="text" id="category" name="category" class="form-input" required>
       </div>
@@ -35,6 +50,11 @@
       <div class="form-group">
         <label for="rating">Rating (Optional, e.g., 4.7)</label>
         <input type="number" id="rating" name="rating" step="0.1" min="0" max="5" class="form-input">
+      </div>
+
+      <div class="form-group">
+        <label for="numRatings">Number of Ratings (Optional, e.g., 250)</label>
+        <input type="number" id="numRatings" name="numRatings" class="form-input">
       </div>
 
       <button type="submit" class="btn-submit">Add Product</button>
