@@ -90,7 +90,7 @@ app.use(async (req, res, next) => {
 // --- 3. Routes ---
 // Use the route files
 app.use('/', authRoutes);
-app.use('/', storeRoutes); 
+app.use('/', storeRoutes);
 app.use('/admin', requireAuth, adminRoutes);
 
 
