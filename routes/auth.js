@@ -2,9 +2,100 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const { sendOTPEmail } = require('../utils/mailer');
 
 const BRAND_NAME = "Pixelcart"; // Use this for page titles
+
+// --- NEW ---
+
+// Show Signup Page
+router.get('/signup', (req, res) => {
+  res.render('signup', { title: 'Sign Up', brandName: BRAND_NAME, error: null });
+});
+
+// Handle Signup
+router.post('/signup', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.render('signup', {
+        title: 'Sign Up',
+        brandName: BRAND_NAME,
+        error: 'An account with this email already exists.'
+      });
+    }
+
+    const newUser = new User({ email });
+
+    // If a password was provided, hash it
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      newUser.passwordHash = await bcrypt.hash(password, salt);
+    }
+
+    await newUser.save();
+
+    // Redirect to login with a success message (optional)
+    // Or log them in directly by creating a session/token
+    res.redirect('/login');
+
+  } catch (error) {
+    console.error(error);
+    res.render('signup', {
+      title: 'Sign Up',
+      brandName: BRAND_NAME,
+      error: 'An server error occurred during signup.'
+    });
+  }
+});
+
+// Handle Password Login
+router.post('/login/password', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user || !user.passwordHash) {
+      req.session.error = 'Invalid credentials or no password set for this account.';
+      return res.redirect('/login');
+    }
+
+    const isMatch = await bcrypt.compare(password, user.passwordHash);
+    if (!isMatch) {
+      req.session.error = 'Invalid credentials.';
+      return res.redirect('/login');
+    }
+
+    // --- SUCCESS ---
+    // Create JWT
+    const token = jwt.sign(
+      { id: user._id, name: user.firstName, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    // Store in HTTP-Only cookie
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // Only send over HTTPS in production
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    });
+
+    res.redirect('/products');
+
+  } catch (error) {
+    console.error(error);
+    req.session.error = 'An server error occurred.';
+    res.redirect('/login');
+  }
+});
+
+
+// --- EXISTING ---
 
 // 1. Show Login Page
 router.get('/login', (req, res) => {
@@ -133,11 +224,18 @@ router.post('/verify-otp', async (req, res) => {
 
 // 5. Logout
 router.get('/logout', (req, res) => {
+  // Clear the session
   req.session.destroy((err) => {
     if (err) {
-      return res.redirect('/products'); // Still log them out on client
+      console.error("Session destruction error:", err);
     }
-    res.clearCookie('connect.sid'); // Clears the session cookie
+
+    // Clear the JWT cookie
+    res.clearCookie('token');
+
+    // Clear the session cookie
+    res.clearCookie('connect.sid');
+
     res.redirect('/'); // Redirect to home
   });
 });

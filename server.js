@@ -5,7 +5,10 @@ const express = require('express');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
+const cookieParser = require('cookie-parser');
 const User = require('./models/user'); // Import the User model
+const { requireAuth } = require('./middleware/authMiddleware'); // Import auth middleware
+
 
 // Import routes
 const authRoutes = require('./routes/auth');
@@ -27,6 +30,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // To serve static files (CSS, images, frontend JS)
 app.use(express.static('public'));
+app.use(cookieParser());
+
 
 // Setup EJS as the view engine
 app.set('view engine', 'ejs');
@@ -86,7 +91,8 @@ app.use(async (req, res, next) => {
 // Use the route files
 app.use('/', authRoutes);
 app.use('/', storeRoutes);
-app.use('/', adminRoutes); // Use admin routes
+app.use('/admin', requireAuth, adminRoutes);
+
 
 // 404 Page (Must be at the end)
 app.use((req, res) => {
