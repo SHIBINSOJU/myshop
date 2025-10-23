@@ -21,7 +21,7 @@ router.post('/signup', async (req, res) => {
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
-    if (existingUser) 
+    if (existingUser) {
       return res.render('signup', { 
         title: 'Sign Up', 
         brandName: BRAND_NAME,
@@ -45,10 +45,10 @@ router.post('/signup', async (req, res) => {
 
   } catch (error) {
     console.error(error);
-    res.render('signup', {
-      title: 'Sign Up',
+    res.render('signup', { 
+      title: 'Sign Up', 
       brandName: BRAND_NAME,
-      error: 'An server error occurred during signup.'
+      error: 'An server error occurred during signup.' 
     });
   }
 });
@@ -77,7 +77,7 @@ router.post('/login/password', async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: '7d' }
     );
-
+    
     // Store in HTTP-Only cookie
     res.cookie('token', token, {
       httpOnly: true,
@@ -229,13 +229,13 @@ router.get('/logout', (req, res) => {
     if (err) {
       console.error("Session destruction error:", err);
     }
-
+    
     // Clear the JWT cookie
     res.clearCookie('token');
-
+    
     // Clear the session cookie
-    res.clearCookie('connect.sid');
-
+    res.clearCookie('connect.sid'); 
+    
     res.redirect('/'); // Redirect to home
   });
 });
