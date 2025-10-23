@@ -27,7 +27,8 @@ router.post('/signup', async (req, res) => {
         brandName: BRAND_NAME,
         error: 'An account with this email already exists.' 
       });
-    }
+    
+    // ----- THIS BRACE WAS REMOVED: } -----
 
     const newUser = new User({ email });
 
@@ -73,7 +74,7 @@ router.post('/login/password', async (req, res) => {
     // --- SUCCESS ---
     // Create JWT
     const token = jwt.sign(
-      { id: user._id, name: user.firstName, email: user.email },
+      { id: user._id, email: user.email }, // Removed name, it's not in your schema
       process.env.JWT_SECRET,
       { expiresIn: '7d' }
     );
@@ -84,6 +85,9 @@ router.post('/login/password', async (req, res) => {
       secure: process.env.NODE_ENV === 'production', // Only send over HTTPS in production
       maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
     });
+
+    // Also create the session for server-side auth
+    req.session.userId = user._id;
 
     res.redirect('/products');
 
